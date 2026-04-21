@@ -19,7 +19,7 @@ const [currentIndex, setCurrentIndex] = useState(0);
   const [isImgFading, setIsImgFading] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
-  const [detailsExpanded, setDetailsExpanded] = useState(true);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const [carEffect, setCarEffect] = useState(2);
   const zoomOptions = [100, 150, 200, 300, 400];
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -80,57 +80,19 @@ const goNext = () => {
   };
 
   const changeImage = (direction: number) => {
-    if (isTransitioning) return;
     if (!currentCar.images || currentCar.images.length <= 1) return;
     
-    setIsTransitioning(true);
-    
-    // Fade out
-    setIsImgFading(true);
-    
-    // After fade out, change image and fade in
-    setTimeout(() => {
-      setCurrentImageIndex(prev => {
-        if (direction === 1) {
-          return (prev + 1) % currentCar.images!.length;
-        } else {
-          return prev === 0 ? currentCar.images!.length - 1 : prev - 1;
-        }
-      });
-      
-      // Fade in
-      setTimeout(() => {
-        setIsImgFading(false);
-        // Start new effect animation
-        setCarEffect(prev => prev === 2 ? 3 : 2);
-      }, 300);
-    }, 400);
-    
-    // Reset transitioning
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 1000);
+    setCurrentImageIndex(prev => {
+      if (direction === 1) {
+        return (prev + 1) % currentCar.images!.length;
+      } else {
+        return prev === 0 ? currentCar.images!.length - 1 : prev - 1;
+      }
+    });
   };
 
   const scrollToCar = (index: number) => {
-    if (isTransitioning) return;
-    if (index === currentIndex) return;
-    setIsTransitioning(true);
-    setIsHeroFading(true);
-    if (scrollRef.current) {
-      const item = scrollRef.current.children[index] as HTMLElement;
-      scrollRef.current.scrollTo({
-        left: item.offsetLeft - 100,
-        behavior: 'smooth'
-      });
-    }
-    setTimeout(() => {
-      setCurrentIndex(index);
-    }, 800);
-    setTimeout(() => {
-      setIsHeroFading(false);
-      setIsTransitioning(false);
-    }, 1200);
+    goToCar(index);
   };
 
   useEffect(() => {
@@ -215,6 +177,7 @@ const goNext = () => {
             <span className="car-brand">{currentCar.brand}</span>
             <span className="car-year">{currentCar.year}</span>
           </div>
+          <div className="car-model-line" />
         </div>
         <button 
           type="button" 
@@ -229,22 +192,28 @@ const goNext = () => {
         </button>
       </div>
 
-      {/* Thumbnails Bar */}
+      {/* Thumbnails Bar - Novo Design */}
       <div className="thumbnails-bar">
-        <button className="thumb-nav left" onClick={() => scrollToCar(Math.max(0, currentIndex - 1))}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 19l-7-7 7-7" /></svg>
+        <button className="thumb-nav-corner left-corner" onClick={() => scrollToCar(Math.max(0, currentIndex - 1))}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 19l-7-7 7-7" /></svg>
         </button>
-        <div className="thumbnails-track" ref={scrollRef}>
+        
+        <div className="thumbnails-track-new" ref={scrollRef}>
           {vehicles.map((car, idx) => (
-            <button key={car.id} className={`thumb-item ${idx === currentIndex ? 'active' : ''}`} onClick={() => scrollToCar(idx)}>
-              <div className="thumb-img">
+            <button 
+              key={car.id} 
+              className={`thumb-item-new ${idx === currentIndex ? 'active' : ''}`} 
+              onClick={() => goToCar(idx)}
+            >
+              <div className="thumb-img-new">
                 <Image src={`/flashmultimarcas${car.imageUrl}`} alt={car.model} fill className="object-cover" sizes="80px" />
               </div>
             </button>
           ))}
         </div>
-        <button className="thumb-nav right" onClick={() => scrollToCar(Math.min(vehicles.length - 1, currentIndex + 1))}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 5l7 7-7 7" /></svg>
+        
+        <button className="thumb-nav-corner right-corner" onClick={() => scrollToCar(Math.min(vehicles.length - 1, currentIndex + 1))}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 5l7 7-7 7" /></svg>
         </button>
       </div>
 
@@ -342,60 +311,78 @@ const goNext = () => {
           
           {/* Área com scroll */}
           <div className="gallery-float-scroll">
-            {/* Dados principais do veículo */}
-            <div className="gallery-specs-new">
-              <div className="spec-row">
-                <div className="spec-box">
-                  <span className="spec-box-label">KM</span>
-                  <span className="spec-box-value">{currentCar.mileage}</span>
-                </div>
-                <div className="spec-box">
-                  <span className="spec-box-label">Combustível</span>
-                  <span className="spec-box-value">{currentCar.fuel}</span>
-                </div>
-                <div className="spec-box">
-                  <span className="spec-box-label">Câmbio</span>
-                  <span className="spec-box-value">{currentCar.transmission}</span>
-                </div>
-              </div>
-              
-              {currentCar.extras?.engine && (
-                <div className="spec-row">
-                  <div className="spec-box">
-                    <span className="spec-box-label">Motor</span>
-                    <span className="spec-box-value">{currentCar.extras.engine}</span>
+            {/* Botão para expandir informações */}
+            <button 
+              className="details-toggle-btn"
+              onClick={() => setDetailsExpanded(!detailsExpanded)}
+            >
+              {detailsExpanded ? '▼ MENOS INFORMAÇÕES' : '▶ MAIS INFORMAÇÕES'}
+            </button>
+            
+            {detailsExpanded && (
+              <>
+                {/* Dados principais do veículo */}
+                <div className="gallery-specs-new">
+                  <div className="spec-row">
+                    <div className="spec-box">
+                      <span className="spec-box-icon">🛣️</span>
+                      <span className="spec-box-value">{currentCar.mileage}</span>
+                      <span className="spec-box-label">KM</span>
+                    </div>
+                    <div className="spec-box">
+                      <span className="spec-box-icon">⛽</span>
+                      <span className="spec-box-value">{currentCar.fuel}</span>
+                      <span className="spec-box-label">Combustível</span>
+                    </div>
+                    <div className="spec-box">
+                      <span className="spec-box-icon">⚙️</span>
+                      <span className="spec-box-value">{currentCar.transmission}</span>
+                      <span className="spec-box-label">Câmbio</span>
+                    </div>
                   </div>
-                  {currentCar.extras?.acceleration && (
-                    <div className="spec-box">
-                      <span className="spec-box-label">0-100 km/h</span>
-                      <span className="spec-box-value">{currentCar.extras.acceleration}</span>
-                    </div>
-                  )}
-                  {currentCar.extras?.traction && (
-                    <div className="spec-box">
-                      <span className="spec-box-label">Tração</span>
-                      <span className="spec-box-value">{currentCar.extras.traction}</span>
+                  
+                  {currentCar.extras?.engine && (
+                    <div className="spec-row">
+                      <div className="spec-box">
+                        <span className="spec-box-icon">🔧</span>
+                        <span className="spec-box-value">{currentCar.extras.engine}</span>
+                        <span className="spec-box-label">Motor</span>
+                      </div>
+                      {currentCar.extras?.acceleration && (
+                        <div className="spec-box">
+                          <span className="spec-box-icon">🚀</span>
+                          <span className="spec-box-value">{currentCar.extras.acceleration}</span>
+                          <span className="spec-box-label">0-100 km/h</span>
+                        </div>
+                      )}
+                      {currentCar.extras?.traction && (
+                        <div className="spec-box">
+                          <span className="spec-box-icon">🔗</span>
+                          <span className="spec-box-value">{currentCar.extras.traction}</span>
+                          <span className="spec-box-label">Tração</span>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
-              )}
-            </div>
-            
-            {/* Info extra badges */}
-            <div className="gallery-info-row">
-              {currentCar.extras?.ownership && <span className="info-pill">{currentCar.extras.ownership}</span>}
-              {currentCar.extras?.ipva && <span className="info-pill">IPVA {currentCar.extras.ipva}</span>}
-              {currentCar.extras?.inspection && <span className="info-pill">{currentCar.extras.inspection}</span>}
-              {currentCar.extras?.accidentfree && <span className="info-pill">{currentCar.extras.accidentfree}</span>}
-              {currentCar.extras?.maintenance && <span className="info-pill">{currentCar.extras.maintenance}</span>}
-            </div>
-            
-            {/* Features */}
-            <div className="gallery-features-grid">
-              {(currentCar.features || []).slice(0, 6).map((feat, idx) => (
-                <span key={idx} className="feature-pill">{feat}</span>
-              ))}
-            </div>
+                
+                {/* Info extra badges */}
+                <div className="gallery-info-row">
+                  {currentCar.extras?.ownership && <span className="info-pill">👤 {currentCar.extras.ownership}</span>}
+                  {currentCar.extras?.ipva && <span className="info-pill">📋 IPVA {currentCar.extras.ipva}</span>}
+                  {currentCar.extras?.inspection && <span className="info-pill">✅ {currentCar.extras.inspection}</span>}
+                  {currentCar.extras?.accidentfree && <span className="info-pill">🚗 {currentCar.extras.accidentfree}</span>}
+                  {currentCar.extras?.maintenance && <span className="info-pill">🔑 {currentCar.extras.maintenance}</span>}
+                </div>
+                
+                {/* Features */}
+                <div className="gallery-features-grid">
+                  {(currentCar.features || []).slice(0, 6).map((feat, idx) => (
+                    <span key={idx} className="feature-pill">• {feat}</span>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
