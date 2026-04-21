@@ -880,10 +880,20 @@ body {
 }
 
 @media (max-width: 480px) {
+  .car-info-bar {
+    padding: 0 15px;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+  }
   .thumbnails-bar {
-    top: 65px;
+    bottom: 0;
     padding: 4px;
     gap: 4px;
+    left: 0;
+    right: 0;
+    max-width: 100%;
   }
   
   .thumb-item {
