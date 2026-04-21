@@ -881,6 +881,16 @@ body {
     right: 0;
     max-width: 100%;
   }
+  .car-model {
+    font-size: 2.1rem;
+    line-height: 1.1;
+    min-height: 2.2rem;
+    display: flex;
+    align-items: center;
+  }
+  .car-model-info {
+    margin-top: 2px;
+  }
   .thumbnails-bar {
     bottom: 20px;
     padding: 4px;
@@ -1280,11 +1290,13 @@ body {
 
 .header-logo img {
   object-fit: contain;
+  width: 60px !important;
+  height: auto !important;
 }
 
 @media (max-width: 768px) {
   .header-logo img {
-    width: 60px !important;
+    width: 50px !important;
     height: auto !important;
   }
 

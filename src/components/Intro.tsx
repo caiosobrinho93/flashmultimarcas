@@ -7,24 +7,29 @@ interface IntroProps {
 }
 
 export default function Intro({ onComplete }: IntroProps) {
-  const [stage, setStage] = useState<'curtain' | 'logo' | 'fade' | 'done'>('curtain');
+  const [stage, setStage] = useState(0);
+  const [textVisible, setTextVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer1 = setTimeout(() => setStage('logo'), 500);
-    const timer2 = setTimeout(() => setStage('fade'), 2500);
-    const timer3 = setTimeout(() => setStage('done'), 4000);
-    const timer4 = setTimeout(() => onComplete(), 4500);
+    const t1 = setTimeout(() => setStage(1), 300);
+    const t2 = setTimeout(() => setStage(2), 800);
+    const t3 = setTimeout(() => setTextVisible(true), 1200);
+    const t4 = setTimeout(() => setStage(3), 3500);
+    const t5 = setTimeout(() => setStage(4), 4500);
+    const t6 = setTimeout(() => onComplete(), 5000);
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
-      clearTimeout(timer4);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+      clearTimeout(t6);
     };
   }, [onComplete]);
 
-  if (stage === 'done') return null;
+  if (stage === 5) return null;
 
   return (
     <div 
@@ -37,85 +42,127 @@ export default function Intro({ onComplete }: IntroProps) {
         overflow: 'hidden',
       }}
     >
-      {/* Cortina - esquerda */}
+      {/* Grid effect */}
       <div style={{
         position: 'absolute',
-        left: 0,
-        top: 0,
-        bottom: 0,
-        width: stage === 'curtain' ? '50%' : '0%',
-        background: '#ffc800',
-        transition: 'width 1s ease-in-out',
-        transitionDelay: stage === 'curtain' ? '0s' : '0.5s',
-      }} />
-      
-      {/* Cortina - direita */}
-      <div style={{
-        position: 'absolute',
-        right: 0,
-        top: 0,
-        bottom: 0,
-        width: stage === 'curtain' ? '50%' : '0%',
-        background: '#ffc800',
-        transition: 'width 1s ease-in-out',
-        transitionDelay: stage === 'curtain' ? '0s' : '0.5s',
+        inset: 0,
+        background: `
+          linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px)
+        `,
+        backgroundSize: '50px 50px',
+        animation: 'gridPulse 2s ease-in-out infinite',
       }} />
 
-      {/* Logo */}
+      {/* Scanline effect */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Flash text with glitch effect */}
       <div style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        opacity: stage === 'logo' || stage === 'fade' ? 1 : 0,
-        transition: 'opacity 1.5s ease-in-out',
-        transitionDelay: stage === 'fade' ? '0s' : '0.3s',
+        textAlign: 'center',
       }}>
+        {/* Logo letter F with glow */}
         <div style={{
-          width: 100,
-          height: 100,
-          background: '#ffc800',
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: 20,
-        }}>
-          <span style={{
-            fontFamily: '"Russo One", sans-serif',
-            fontSize: 48,
-            color: '#000',
-          }}>F</span>
-        </div>
-        <h1 style={{
           fontFamily: '"Russo One", sans-serif',
-          fontSize: 32,
-          color: '#fff',
-          textTransform: 'uppercase',
-          letterSpacing: 8,
-        }}>Flash</h1>
-        <p style={{
-          fontFamily: '"Exo 2", sans-serif',
-          fontSize: 14,
-          color: '#00f0ff',
-          textTransform: 'uppercase',
-          letterSpacing: 4,
-        }}>Multimarcas</p>
+          fontSize: stage >= 2 ? 'clamp(4rem, 15vw, 10rem)' : '0rem',
+          color: '#ffc800',
+          textShadow: stage >= 2 ? `
+            0 0 10px #ffc800,
+            0 0 20px #ffc800,
+            0 0 40px #ffc800,
+            0 0 80px rgba(255,200,0,0.5)
+          ` : 'none',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          opacity: stage >= 2 ? 1 : 0,
+        }}>
+          F
+        </div>
+
+        {/* Text lines with typewriter effect */}
+        <div style={{
+          marginTop: 20,
+          overflow: 'hidden',
+          opacity: textVisible ? 1 : 0,
+          transition: 'opacity 0.5s ease',
+        }}>
+          <h1 style={{
+            fontFamily: '"Russo One", sans-serif',
+            fontSize: 'clamp(1.5rem, 5vw, 3rem)',
+            color: '#fff',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5em',
+            margin: 0,
+            textShadow: '0 0 20px rgba(255,255,255,0.5)',
+          }}>
+            Flash
+          </h1>
+          <p style={{
+            fontFamily: '"Exo 2", sans-serif',
+            fontSize: 'clamp(0.8rem, 2vw, 1.2rem)',
+            color: '#00f0ff',
+            textTransform: 'uppercase',
+            letterSpacing: '0.3em',
+            margin: '10px 0 0 0',
+            textShadow: '0 0 10px #00f0ff',
+          }}>
+            Multimarcas
+          </p>
+        </div>
       </div>
 
-      {/* Fade out final */}
-      {stage === 'fade' && (
+      {/* Glitch lines */}
+      {stage >= 1 && stage < 4 && (
+        <>
+          <div style={{
+            position: 'absolute',
+            top: '30%',
+            left: 0,
+            right: 0,
+            height: 2,
+            background: 'rgba(0,240,255,0.5)',
+            animation: 'glitchLine 0.3s infinite',
+          }} />
+          <div style={{
+            position: 'absolute',
+            top: '70%',
+            left: 0,
+            right: 0,
+            height: 2,
+            background: 'rgba(255,200,0,0.3)',
+            animation: 'glitchLine 0.4s infinite reverse',
+          }} />
+        </>
+      )}
+
+      {/* Final fade */}
+      {stage >= 3 && (
         <div style={{
           position: 'absolute',
           inset: 0,
           background: '#000',
-          animation: 'fadeOut 1s ease-out forwards',
+          animation: stage === 4 ? 'fadeOut 0.8s ease-out forwards' : 'none',
+          opacity: stage === 3 ? 0 : stage === 4 ? undefined : 0,
         }} />
       )}
+
       <style>{`
+        @keyframes gridPulse {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+        @keyframes glitchLine {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
         @keyframes fadeOut {
           from { opacity: 1; }
           to { opacity: 0; }
