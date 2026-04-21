@@ -19,7 +19,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3">
             <div className="w-12 h-12 relative">
               <Image
-                src="/logo.png"
+                src="/flashmultimarcas/logo.png"
                 alt="Flash Multimarcas"
                 fill
                 className="object-contain"

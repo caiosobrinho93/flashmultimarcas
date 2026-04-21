@@ -70,7 +70,7 @@ export default function PremiumSite({ vehicles }: PremiumSiteProps) {
         </button>
 
         <Link href="/" className="logo" onClick={() => setMenuOpen(false)}>
-          <Image src="/logo.png" alt="Flash" width={120} height={40} style={{ width: 'auto', height: 'auto' }} />
+          <Image src="/flashmultimarcas/logo.png" alt="Flash" width={120} height={40} style={{ width: 'auto', height: 'auto' }} />
         </Link>
 
         <div className="header-actions">

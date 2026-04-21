@@ -134,7 +134,7 @@ const goNext = () => {
         </button>
         
         <div className="header-logo">
-          <Image src="/logo.png" alt="Flash" width={80} height={28} style={{ width: 'auto', height: 'auto' }} />
+          <Image src="/flashmultimarcas/logo.png" alt="Flash" width={80} height={28} style={{ width: 'auto', height: 'auto' }} />
         </div>
 
         
@@ -252,7 +252,7 @@ const goNext = () => {
       {/* Hero Main */}
       <main 
           className={`tesla-hero ${isHeroFading ? 'fading' : ''} ${isTransitioning ? 'transition-effect effect-2' : ''} ${!isHeroFading ? 'effect-2' : ''}`} 
-          style={{ backgroundImage: `url(${currentCar.imageUrl})` }}
+          style={{ backgroundImage: `url(/flashmultimarcas${currentCar.imageUrl})` }}
         >
 
         <div className="hero-dots">
@@ -318,7 +318,7 @@ const goNext = () => {
         <div 
           className={`gallery-image-full ${isImgFading ? 'fading' : ''}`}
           style={{ 
-            backgroundImage: `url(${currentCar.images ? currentCar.images[currentImageIndex] : currentCar.imageUrl})`,
+            backgroundImage: `url(/flashmultimarcas${currentCar.images ? currentCar.images[currentImageIndex] : currentCar.imageUrl})`,
             backgroundSize: zoomLevel === 100 ? 'contain' : 'cover',
             backgroundPosition: 'center'
           }}

@@ -44,7 +44,7 @@ export default function GaragePro({ vehicles }: GarageProProps) {
       {/* Car View */}
       <div 
         className="garage-pro-car-view"
-        style={{ backgroundImage: `url(${currentCar.imageUrl})` }}
+        style={{ backgroundImage: `url(/flashmultimarcas${currentCar.imageUrl})` }}
       >
         <div className="garage-pro-overlay" />
         
