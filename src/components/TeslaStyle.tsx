@@ -19,6 +19,7 @@ const [currentIndex, setCurrentIndex] = useState(0);
   const [isImgFading, setIsImgFading] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const zoomOptions = [100, 150, 200, 300, 400];
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +78,8 @@ const goNext = () => {
   const changeImage = (direction: number) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setIsHeroFading(true);
+    setZoomLevel(150);
+    setTimeout(() => setZoomLevel(100), 600);
     setTimeout(() => {
       if (currentCar.images) {
         setCurrentImageIndex(prev => {
@@ -87,11 +89,10 @@ const goNext = () => {
           return newIndex;
         });
       }
-      setIsHeroFading(false);
-    }, 800);
+    }, 300);
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 1500);
+    }, 800);
   };
 
   const scrollToCar = (index: number) => {
@@ -324,34 +325,46 @@ const goNext = () => {
           
           {/* Área com scroll */}
           <div className="gallery-float-scroll">
-            {/* Dados do veículo */}
-            <div className="gallery-data-grid">
-              <div className="data-item"><span className="data-label">KM</span><span className="data-value">{currentCar.mileage}</span></div>
-              <div className="data-item"><span className="data-label">Comb</span><span className="data-value">{currentCar.fuel}</span></div>
-              <div className="data-item"><span className="data-label">Câm</span><span className="data-value">{currentCar.transmission}</span></div>
-              {currentCar.extras?.engine && <div className="data-item"><span className="data-label">Motor</span><span className="data-value">{currentCar.extras.engine}</span></div>}
-              {currentCar.extras?.torque && <div className="data-item"><span className="data-label">Torque</span><span className="data-value">{currentCar.extras.torque}</span></div>}
-              {currentCar.extras?.consumption && <div className="data-item"><span className="data-label">Consumo</span><span className="data-value">{currentCar.extras.consumption}</span></div>}
-              {currentCar.extras?.traction && <div className="data-item"><span className="data-label">Tração</span><span className="data-value">{currentCar.extras.traction}</span></div>}
-              {currentCar.extras?.acceleration && <div className="data-item"><span className="data-label">0-100</span><span className="data-value">{currentCar.extras.acceleration}</span></div>}
-              {currentCar.extras?.capacity && <div className="data-item"><span className="data-label">Carga</span><span className="data-value">{currentCar.extras.capacity}</span></div>}
-            </div>
+            {/* Botão para expandir informações */}
+            <button 
+              className="details-toggle-btn"
+              onClick={() => setDetailsExpanded(!detailsExpanded)}
+            >
+              {detailsExpanded ? '▼ MENOS INFORMAÇÕES' : '▶ MAIS INFORMAÇÕES'}
+            </button>
             
-            {/* Info extra */}
-            <div className="gallery-info-row">
-              {currentCar.extras?.ownership && <span className="info-pill">{currentCar.extras.ownership}</span>}
-              {currentCar.extras?.ipva && <span className="info-pill">IPVA {currentCar.extras.ipva}</span>}
-              {currentCar.extras?.inspection && <span className="info-pill">{currentCar.extras.inspection}</span>}
-              {currentCar.extras?.accidentfree && <span className="info-pill">{currentCar.extras.accidentfree}</span>}
-              {currentCar.extras?.maintenance && <span className="info-pill">{currentCar.extras.maintenance}</span>}
-            </div>
-            
-            {/* Features */}
-            <div className="gallery-features-grid">
-              {(currentCar.features || []).slice(0, 6).map((feat, idx) => (
-                <span key={idx} className="feature-pill">{feat}</span>
-              ))}
-            </div>
+            {detailsExpanded && (
+              <>
+                {/* Dados do veículo */}
+                <div className="gallery-data-grid">
+                  <div className="data-item"><span className="data-label">KM</span><span className="data-value">{currentCar.mileage}</span></div>
+                  <div className="data-item"><span className="data-label">Comb</span><span className="data-value">{currentCar.fuel}</span></div>
+                  <div className="data-item"><span className="data-label">Câm</span><span className="data-value">{currentCar.transmission}</span></div>
+                  {currentCar.extras?.engine && <div className="data-item"><span className="data-label">Motor</span><span className="data-value">{currentCar.extras.engine}</span></div>}
+                  {currentCar.extras?.torque && <div className="data-item"><span className="data-label">Torque</span><span className="data-value">{currentCar.extras.torque}</span></div>}
+                  {currentCar.extras?.consumption && <div className="data-item"><span className="data-label">Consumo</span><span className="data-value">{currentCar.extras.consumption}</span></div>}
+                  {currentCar.extras?.traction && <div className="data-item"><span className="data-label">Tração</span><span className="data-value">{currentCar.extras.traction}</span></div>}
+                  {currentCar.extras?.acceleration && <div className="data-item"><span className="data-label">0-100</span><span className="data-value">{currentCar.extras.acceleration}</span></div>}
+                  {currentCar.extras?.capacity && <div className="data-item"><span className="data-label">Carga</span><span className="data-value">{currentCar.extras.capacity}</span></div>}
+                </div>
+                
+                {/* Info extra */}
+                <div className="gallery-info-row">
+                  {currentCar.extras?.ownership && <span className="info-pill">{currentCar.extras.ownership}</span>}
+                  {currentCar.extras?.ipva && <span className="info-pill">IPVA {currentCar.extras.ipva}</span>}
+                  {currentCar.extras?.inspection && <span className="info-pill">{currentCar.extras.inspection}</span>}
+                  {currentCar.extras?.accidentfree && <span className="info-pill">{currentCar.extras.accidentfree}</span>}
+                  {currentCar.extras?.maintenance && <span className="info-pill">{currentCar.extras.maintenance}</span>}
+                </div>
+                
+                {/* Features */}
+                <div className="gallery-features-grid">
+                  {(currentCar.features || []).slice(0, 6).map((feat, idx) => (
+                    <span key={idx} className="feature-pill">{feat}</span>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

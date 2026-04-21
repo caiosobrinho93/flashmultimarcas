@@ -777,10 +777,14 @@ body {
 
 .car-model {
   font-family: 'Russo One', sans-serif;
-  font-size: 1.8rem;
+  font-size: 2.6rem;
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 2px;
+  line-height: 1.1;
+  min-height: 2.8rem;
+  display: flex;
+  align-items: center;
 }
 
 .car-model-info {
@@ -1045,7 +1049,7 @@ body {
 
 .info-left .car-model {
   font-family: 'Russo One', sans-serif;
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: 1.8rem;
   color: var(--white);
   line-height: 1.1;
 }
@@ -1061,7 +1065,7 @@ body {
     font-size: 0.65rem;
   }
   .info-left .car-model {
-    font-size: 1rem;
+    font-size: 1.4rem;
   }
   .info-left .car-year {
     font-size: 0.7rem;
@@ -2135,6 +2139,25 @@ body {
   border-top: 1px solid rgba(255,255,255,0.15);
   padding-top: 8px;
   margin-top: 4px;
+}
+
+.details-toggle-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,200,0,0.1);
+  border: 1px solid rgba(255,200,0,0.3);
+  border-radius: 8px;
+  color: #ffc800;
+  font-family: 'Russo One', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.details-toggle-btn:hover {
+  background: rgba(255,200,0,0.2);
+  border-color: #ffc800;
 }
 
 .gallery-float-scroll::-webkit-scrollbar {
