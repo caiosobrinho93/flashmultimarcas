@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: `Loja de carros em Votuporanga/SP. ${storeInfo.address}. ${storeInfo.phone}.`,
   keywords: 'carros, seminovos, Votuporanga, Flash Multimarcas',
   authors: [{ name: storeInfo.name }],
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL('https://caiosobrinho93.github.io/flashmultimarcas'),
   openGraph: {
     title: storeInfo.name,
     description: `Carros em Votuporanga/SP`,
