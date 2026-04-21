@@ -175,7 +175,7 @@ const goNext = () => {
               {vehicles.map((car, idx) => (
                 <button key={car.id} className={`menu-item ${idx === currentIndex ? 'active' : ''}`} onClick={() => { goToCar(idx); setMenuOpen(false); }}>
                   <div className="menu-item-img">
-                    <Image src={`/flashmultimarcas$/flashmultimarcas${car.imageUrl}`} alt={car.model} fill className="object-cover" sizes="80px" />
+                    <Image src={`/flashmultimarcas${car.imageUrl}`} alt={car.model} fill className="object-cover" sizes="80px" />
                   </div>
                   <div className="menu-item-info">
                     <span className="brand">{car.brand}</span>
@@ -198,7 +198,7 @@ const goNext = () => {
           {vehicles.map((car, idx) => (
             <button key={car.id} className={`thumb-item ${idx === currentIndex ? 'active' : ''}`} onClick={() => scrollToCar(idx)}>
               <div className="thumb-img">
-                <Image src=/flashmultimarcas${car.imageUrl} alt={car.model} fill className="object-cover" sizes="80px" />
+                <Image src={`/flashmultimarcas${car.imageUrl}`} alt={car.model} fill className="object-cover" sizes="80px" />
               </div>
             </button>
           ))}
@@ -239,7 +239,7 @@ const goNext = () => {
           {vehicles.map((car, idx) => (
             <button key={car.id} className={`thumb-item ${idx === currentIndex ? 'active' : ''}`} onClick={() => scrollToCar(idx)}>
               <div className="thumb-img">
-                <Image src=/flashmultimarcas${car.imageUrl} alt={car.model} fill className="object-cover" sizes="80px" />
+                <Image src={`/flashmultimarcas${car.imageUrl}`} alt={car.model} fill className="object-cover" sizes="80px" />
               </div>
             </button>
           ))}
