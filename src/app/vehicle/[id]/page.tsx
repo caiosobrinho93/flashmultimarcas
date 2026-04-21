@@ -1,6 +1,6 @@
-import { notFound } from 'next/navigation';
-import VehicleDetails from '@/components/VehicleDetails';
-import { vehicles } from '@/lib/data';
+ï»¿import { notFound } from "next/navigation";
+import VehicleDetails from "@/components/VehicleDetails";
+import { vehicles } from "@/lib/data";
 
 interface VehiclePageProps {
   params: { id: string };
@@ -16,20 +16,20 @@ export async function generateMetadata({ params }: VehiclePageProps) {
   const vehicle = vehicles.find(v => v.id === params.id);
   
   if (!vehicle) {
-    return { title: 'Veículo Não Encontrado' };
+    return { title: "VeÃ­culo NÃ£o Encontrado" };
   }
   
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
       maximumFractionDigits: 0,
     }).format(price);
   };
   
   return {
-    title: vehicle.model + ' - ' + formatPrice(vehicle.price) + ' | Flash Multimarcas',
-    description: vehicle.model + ' ' + vehicle.year + '. ' + vehicle.mileage + ', ' + vehicle.transmission + '. Por ' + formatPrice(vehicle.price),
+    title: vehicle.model + " - " + formatPrice(vehicle.price) + " | Flash Multimarcas",
+    description: vehicle.model + " " + vehicle.year + ". " + vehicle.mileage + ", " + vehicle.transmission + ". Por " + formatPrice(vehicle.price),
   };
 }
 
