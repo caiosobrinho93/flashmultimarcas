@@ -307,7 +307,7 @@ const goNext = () => {
         />
         
         {/* Card flutuante com scroll interno */}
-        <div className="gallery-float-card">
+        <div className={`gallery-float-card ${detailsExpanded ? 'expanded' : ''}`}>
           {/* Linha 1: Nome + WhatsApp */}
           <div className="gallery-float-header">
             <div className="gallery-float-title-area">

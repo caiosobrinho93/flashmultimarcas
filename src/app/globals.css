@@ -2028,6 +2028,7 @@ body {
   left: 20px;
   width: 90%;
   max-width: 900px;
+  max-height: 300px;
   background: rgba(0,0,0,0.95);
   border: 1px solid rgba(255,200,0,0.4);
   border-radius: 10px;
@@ -2035,6 +2036,12 @@ body {
   z-index: 50;
   display: flex;
   flex-direction: column;
+  transition: max-height 0.4s ease;
+  overflow: hidden;
+}
+
+.gallery-float-card.expanded {
+  max-height: 480px;
 }
 
 .gallery-float-header {
@@ -2403,8 +2410,12 @@ body {
     transform: translateX(-50%);
     width: 90%;
     max-width: 320px;
-    height: 200px;
+    max-height: 250px;
     padding: 12px;
+  }
+
+  .gallery-float-card.expanded {
+    max-height: 420px;
   }
 
   .gallery-brand {
