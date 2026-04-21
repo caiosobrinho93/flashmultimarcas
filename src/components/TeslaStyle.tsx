@@ -20,6 +20,7 @@ const [currentIndex, setCurrentIndex] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const [carEffect, setCarEffect] = useState(0);
   const zoomOptions = [100, 150, 200, 300, 400];
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -39,6 +40,7 @@ const [currentIndex, setCurrentIndex] = useState(0);
     setTimeout(() => {
       setCurrentIndex(index);
       setIsHeroFading(false);
+      setCarEffect(prev => (prev + 1) % 3);
     }, 600);
   };
 
@@ -48,11 +50,12 @@ const goNext = () => {
     setIsHeroFading(true);
     setTimeout(() => {
       setCurrentIndex(prev => (prev + 1) % vehicles.length);
-    }, 800);
+      setCarEffect(prev => (prev + 1) % 3);
+    }, 600);
     setTimeout(() => {
       setIsHeroFading(false);
       setIsTransitioning(false);
-    }, 1200);
+    }, 1000);
   };
 
   const goPrev = () => {
@@ -61,11 +64,12 @@ const goNext = () => {
     setIsHeroFading(true);
     setTimeout(() => {
       setCurrentIndex(prev => prev === 0 ? vehicles.length - 1 : prev - 1);
-    }, 800);
+      setCarEffect(prev => (prev + 1) % 3);
+    }, 600);
     setTimeout(() => {
       setIsHeroFading(false);
       setIsTransitioning(false);
-    }, 1200);
+    }, 1000);
   };
 
   const handleWhatsapp = () => {
@@ -80,8 +84,11 @@ const goNext = () => {
     if (!currentCar.images || currentCar.images.length <= 1) return;
     
     setIsTransitioning(true);
-    setZoomLevel(140);
     
+    // Fade out
+    setIsImgFading(true);
+    
+    // After fade out, change image and fade in
     setTimeout(() => {
       setCurrentImageIndex(prev => {
         if (direction === 1) {
@@ -90,12 +97,19 @@ const goNext = () => {
           return prev === 0 ? currentCar.images!.length - 1 : prev - 1;
         }
       });
-      setZoomLevel(100);
+      
+      // Fade in
+      setTimeout(() => {
+        setIsImgFading(false);
+        // Start new effect animation
+        setCarEffect(prev => (prev + 1) % 3);
+      }, 300);
     }, 400);
     
+    // Reset transitioning
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 600);
+    }, 1000);
   };
 
   const scrollToCar = (index: number) => {
@@ -236,7 +250,7 @@ const goNext = () => {
 
       {/* Hero Main */}
       <main 
-          className={`tesla-hero ${isHeroFading ? 'fading' : ''} ${isTransitioning ? 'transition-effect effect-2' : ''} ${!isHeroFading ? 'effect-2' : ''}`} 
+          className={`tesla-hero ${isHeroFading ? 'fading' : ''} effect-${carEffect}`} 
           style={{ backgroundImage: `url(/flashmultimarcas${currentCar.imageUrl})` }}
         >
 
@@ -251,7 +265,7 @@ const goNext = () => {
       <div className={`gallery-modal ${detailsModalOpen ? 'open' : ''}`} style={{ zIndex: 50 }}>
         <div className="gallery-backdrop" />
         
-        <button className="gallery-close" onClick={() => setDetailsModalOpen(false)}>
+        <button className="gallery-close" onClick={() => { setDetailsModalOpen(false); setCarEffect(2); }}>
           ✕
         </button>
         

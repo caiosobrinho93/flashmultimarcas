@@ -8,25 +8,26 @@ interface IntroProps {
 }
 
 export default function Intro({ onComplete }: IntroProps) {
-  const [stage, setStage] = useState(0);
-  const [logoVisible, setLogoVisible] = useState(false);
+  const [stage, setStage] = useState<'start' | 'fadein' | 'hold' | 'fadeout' | 'done'>('start');
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 300);
-    const t2 = setTimeout(() => setLogoVisible(true), 600);
-    const t3 = setTimeout(() => setStage(2), 3000);
-    const t4 = setTimeout(() => setLogoVisible(false), 3500);
-    const t5 = setTimeout(() => setStage(3), 4200);
-    const t6 = setTimeout(() => onComplete(), 4800);
+    const t1 = setTimeout(() => setStage('fadein'), 100);
+    const t2 = setTimeout(() => setStage('hold'), 1200);
+    const t3 = setTimeout(() => setStage('fadeout'), 3200);
+    const t4 = setTimeout(() => setStage('done'), 4000);
+    const t5 = setTimeout(() => onComplete(), 4200);
 
     return () => {
       clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-      clearTimeout(t4); clearTimeout(t5); clearTimeout(t6);
+      clearTimeout(t4); clearTimeout(t5);
     };
   }, [onComplete]);
 
-  if (stage === 4) return null;
+  if (stage === 'done') return null;
+
+  const isVisible = stage === 'fadein' || stage === 'hold';
+  const isFadingOut = stage === 'fadeout';
 
   return (
     <div 
@@ -40,6 +41,8 @@ export default function Intro({ onComplete }: IntroProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        opacity: isFadingOut ? 0 : 1,
+        transition: 'opacity 0.8s ease-in-out',
       }}
     >
       {/* Grid effect */}
@@ -51,15 +54,17 @@ export default function Intro({ onComplete }: IntroProps) {
           linear-gradient(90deg, rgba(255,200,0,0.02) 1px, transparent 1px)
         `,
         backgroundSize: '50px 50px',
+        opacity: isVisible ? 0.5 : 0,
+        transition: 'opacity 0.5s ease',
       }} />
 
       {/* Logo with fade effect */}
       <div style={{
-        opacity: logoVisible ? 1 : 0,
+        opacity: isVisible ? 1 : 0,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        transform: logoVisible ? 'scale(1)' : 'scale(0.95)',
+        transform: isVisible ? 'scale(1)' : 'scale(0.9)',
         transition: 'all 1s ease-in-out',
       }}>
         <div style={{
@@ -76,23 +81,6 @@ export default function Intro({ onComplete }: IntroProps) {
           />
         </div>
       </div>
-
-      {/* Final fade to black */}
-      {stage >= 2 && (
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: '#000',
-          animation: stage === 3 ? 'introFadeOut 0.8s ease-out forwards' : 'none',
-        }} />
-      )}
-
-      <style>{`
-        @keyframes introFadeOut {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 }
