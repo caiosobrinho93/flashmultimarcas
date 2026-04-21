@@ -189,26 +189,7 @@ const goNext = () => {
         </div>
       </div>
 
-      {/* Thumbnails Bar */}
-      <div className="thumbnails-bar">
-        <button className="thumb-nav left" onClick={() => scrollToCar(Math.max(0, currentIndex - 1))}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 19l-7-7 7-7" /></svg>
-        </button>
-        <div className="thumbnails-track" ref={scrollRef}>
-          {vehicles.map((car, idx) => (
-            <button key={car.id} className={`thumb-item ${idx === currentIndex ? 'active' : ''}`} onClick={() => scrollToCar(idx)}>
-              <div className="thumb-img">
-                <Image src={`/flashmultimarcas${car.imageUrl}`} alt={car.model} fill className="object-cover" sizes="80px" />
-              </div>
-            </button>
-          ))}
-        </div>
-        <button className="thumb-nav right" onClick={() => scrollToCar(Math.min(vehicles.length - 1, currentIndex + 1))}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 5l7 7-7 7" /></svg>
-        </button>
-      </div>
-
-{/* Car Info Bar */}
+      {/* Car Info Bar */}
       <div className="car-info-bar">
         <div className="car-name-group">
           <span className="car-model">{currentCar.model}</span>
