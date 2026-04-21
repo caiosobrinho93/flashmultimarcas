@@ -886,9 +886,9 @@ body {
     max-width: 100%;
   }
   .car-model {
-    font-size: 2.6rem;
+    font-size: 1.7rem;
     line-height: 1.1;
-    min-height: 2.8rem;
+    min-height: 1.9rem;
     display: flex;
     align-items: center;
   }
