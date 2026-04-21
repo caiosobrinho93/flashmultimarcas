@@ -38,7 +38,7 @@ const [currentIndex, setCurrentIndex] = useState(0);
     setTimeout(() => {
       setCurrentIndex(index);
       setIsHeroFading(false);
-    }, 300);
+    }, 600);
   };
 
 const goNext = () => {
@@ -47,11 +47,11 @@ const goNext = () => {
     setIsHeroFading(true);
     setTimeout(() => {
       setCurrentIndex(prev => (prev + 1) % vehicles.length);
-    }, 500);
+    }, 800);
     setTimeout(() => {
       setIsHeroFading(false);
       setIsTransitioning(false);
-    }, 800);
+    }, 1200);
   };
 
   const goPrev = () => {
@@ -60,11 +60,11 @@ const goNext = () => {
     setIsHeroFading(true);
     setTimeout(() => {
       setCurrentIndex(prev => prev === 0 ? vehicles.length - 1 : prev - 1);
-    }, 500);
+    }, 800);
     setTimeout(() => {
       setIsHeroFading(false);
       setIsTransitioning(false);
-    }, 800);
+    }, 1200);
   };
 
   const handleWhatsapp = () => {
@@ -88,10 +88,10 @@ const goNext = () => {
         });
       }
       setIsHeroFading(false);
-    }, 500);
+    }, 800);
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 1000);
+    }, 1500);
   };
 
   const scrollToCar = (index: number) => {
@@ -108,18 +108,18 @@ const goNext = () => {
     }
     setTimeout(() => {
       setCurrentIndex(index);
-    }, 500);
+    }, 800);
     setTimeout(() => {
       setIsHeroFading(false);
       setIsTransitioning(false);
-    }, 800);
+    }, 1200);
   };
 
   useEffect(() => {
     if (detailsModalOpen) return;
     const autoPlay = setInterval(() => {
       goNext();
-    }, 5000);
+    }, 8000);
     return () => clearInterval(autoPlay);
   }, [detailsModalOpen, goNext]);
 
