@@ -2,6 +2,7 @@
 const nextConfig = {
   output: 'export',
   basePath: '/flashmultimarcas',
+  trailingSlash: true,
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -10,6 +11,12 @@ const nextConfig = {
         hostname: 'via.placeholder.com',
       },
     ],
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = { fs: false, net: false, tls: false };
+    }
+    return config;
   },
 }
 
