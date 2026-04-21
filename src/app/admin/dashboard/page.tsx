@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { Vehicle, Lead } from '@/types';
 
-const supabaseUrl = 'https://ngmcmamyiljczmselrcp.supabase.co';
-const supabaseAnonKey = 'sb_publishable_uSPLC9knj9B9DnHtv4gcUg_lO_50uNv';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function Dashboard() {

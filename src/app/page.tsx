@@ -6,8 +6,8 @@ import Intro from '@/components/Intro';
 import { Vehicle } from '@/types';
 import { vehicles as localVehicles } from '@/lib/data';
 
-const supabaseUrl = 'https://ngmcmamyiljczmselrcp.supabase.co';
-const supabaseAnonKey = 'sb_publishable_uSPLC9knj9B9DnHtv4gcUg_lO_50uNv';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function preloadImages(imagePaths: string[]) {
   return Promise.all(

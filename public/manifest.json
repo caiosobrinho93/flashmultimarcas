@@ -1,0 +1,22 @@
+{
+  "name": "Flash Multimarcas",
+  "short_name": "Flash",
+  "description": "Loja de veículos seminovos e usados",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ffc800",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/flashmultimarcas/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/flashmultimarcas/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

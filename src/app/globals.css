@@ -887,13 +887,6 @@ body {
   transform: scale(0.95);
 }
 
-.thumb-item-new.active {
-  opacity: 1;
-  transform: scale(1.1);
-  border-color: #ffc800;
-  box-shadow: 0 0 20px rgba(255,200,0,0.4);
-}
-
 .thumb-img-new {
   position: relative;
   width: 100%;
@@ -2036,8 +2029,8 @@ body {
 
 .gallery-arrow {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 200px;
+  transform: translateY(0);
   width: 40px;
   height: 40px;
   background: rgba(0,0,0,0.85);
@@ -2061,8 +2054,32 @@ body {
   border-color: #ffc800;
   color: #000;
   box-shadow: 0 0 25px rgba(255,200,0,0.5);
-  transform: translateY(-50%) scale(1.1);
+  transform: scale(1.1);
   opacity: 1;
+}
+
+.gallery-arrow-left {
+  left: 10px;
+}
+
+.gallery-arrow-right {
+  right: 10px;
+}
+
+@media (max-width: 768px) {
+  .gallery-arrow {
+    bottom: 180px;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .gallery-arrow-left {
+    left: 8px;
+  }
+  
+  .gallery-arrow-right {
+    right: 8px;
+  }
 }
 
 .gallery-zoom-menu {
@@ -2612,12 +2629,113 @@ body {
   }
 }
 
-/* Novo design para specs do veículo */
-.gallery-specs-new {
+/* Legacy spec styles - replaced by new layout */
+
+.specs-grid-new {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.spec-item-new {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,200,0,0.1);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.spec-item-new-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.spec-item-new-content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 2px;
+}
+
+.spec-item-new-label {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-item-new-value {
+  font-size: 0.85rem;
+  color: #ffc800;
+  font-weight: 700;
+  font-family: 'Russo One', sans-serif;
+}
+
+.features-list {
+  margin-top: 4px;
+}
+
+.features-list h4 {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.features-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.features-list li {
+  font-size: 0.75rem;
+  color: #fff;
+  background: rgba(255,200,0,0.1);
+  border: 1px solid rgba(255,200,0,0.2);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .specs-grid-new {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  
+  .spec-item-new {
+    padding: 8px;
+  }
+  
+  .spec-item-new-icon {
+    font-size: 1rem;
+  }
+  
+  .spec-item-new-content {
+    gap: 1px;
+  }
+  
+  .spec-item-new-label {
+    font-size: 0.6rem;
+  }
+  
+  .spec-item-new-value {
+    font-size: 0.9rem;
+  }
+  
+  .features-list ul {
+    gap: 4px;
+  }
+  
+  .features-list li {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
 }
 
 .spec-row {
@@ -2661,28 +2779,28 @@ body {
 
 @media (max-width: 768px) {
   .gallery-specs-new {
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 8px;
   }
   
   .spec-row {
-    gap: 4px;
+    gap: 6px;
   }
   
   .spec-box {
-    padding: 6px 5px;
+    padding: 8px 6px;
   }
   
   .spec-box-icon {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
   }
   
   .spec-box-value {
-    font-size: 0.8rem;
+    font-size: 1rem;
   }
   
   .spec-box-label {
-    font-size: 0.5rem;
+    font-size: 0.65rem;
   }
 }
 

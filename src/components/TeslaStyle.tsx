@@ -21,6 +21,7 @@ const [currentIndex, setCurrentIndex] = useState(0);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
   const [carEffect, setCarEffect] = useState(2);
+  const [searchTerm, setSearchTerm] = useState('');
   const zoomOptions = [100, 150, 200, 300, 400];
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -316,72 +317,90 @@ const goNext = () => {
               className="details-toggle-btn"
               onClick={() => setDetailsExpanded(!detailsExpanded)}
             >
-              {detailsExpanded ? '▼ MENOS INFORMAÇÕES' : '▶ MAIS INFORMAÇÕES'}
+              {detailsExpanded ? '▼ Ver menos' : '▶ Ver mais características'}
             </button>
             
             {detailsExpanded && (
-              <>
-                {/* Dados principais do veículo */}
-                <div className="gallery-specs-new">
-                  <div className="spec-row">
-                    <div className="spec-box">
-                      <span className="spec-box-icon">🛣️</span>
-                      <span className="spec-box-value">{currentCar.mileage}</span>
-                      <span className="spec-box-label">KM</span>
+              <div className="details-expanded-content">
+                {/* Grade de especificações */}
+                <div className="specs-grid-new">
+                  <div className="spec-item-new">
+                    <span className="spec-item-new-icon">🛣️</span>
+                    <div className="spec-item-new-content">
+                      <span className="spec-item-new-label">Quilometragem</span>
+                      <span className="spec-item-new-value">{currentCar.mileage}</span>
                     </div>
-                    <div className="spec-box">
-                      <span className="spec-box-icon">⛽</span>
-                      <span className="spec-box-value">{currentCar.fuel}</span>
-                      <span className="spec-box-label">Combustível</span>
+                  </div>
+                  <div className="spec-item-new">
+                    <span className="spec-item-new-icon">⛽</span>
+                    <div className="spec-item-new-content">
+                      <span className="spec-item-new-label">Combustível</span>
+                      <span className="spec-item-new-value">{currentCar.fuel}</span>
                     </div>
-                    <div className="spec-box">
-                      <span className="spec-box-icon">⚙️</span>
-                      <span className="spec-box-value">{currentCar.transmission}</span>
-                      <span className="spec-box-label">Câmbio</span>
+                  </div>
+                  <div className="spec-item-new">
+                    <span className="spec-item-new-icon">⚙️</span>
+                    <div className="spec-item-new-content">
+                      <span className="spec-item-new-label">Câmbio</span>
+                      <span className="spec-item-new-value">{currentCar.transmission}</span>
+                    </div>
+                  </div>
+                  <div className="spec-item-new">
+                    <span className="spec-item-new-icon">🎨</span>
+                    <div className="spec-item-new-content">
+                      <span className="spec-item-new-label">Cor</span>
+                      <span className="spec-item-new-value">{currentCar.color}</span>
                     </div>
                   </div>
                   
                   {currentCar.extras?.engine && (
-                    <div className="spec-row">
-                      <div className="spec-box">
-                        <span className="spec-box-icon">🔧</span>
-                        <span className="spec-box-value">{currentCar.extras.engine}</span>
-                        <span className="spec-box-label">Motor</span>
+                    <div className="spec-item-new">
+                      <span className="spec-item-new-icon">🔧</span>
+                      <div className="spec-item-new-content">
+                        <span className="spec-item-new-label">Motor</span>
+                        <span className="spec-item-new-value">{currentCar.extras.engine}</span>
                       </div>
-                      {currentCar.extras?.acceleration && (
-                        <div className="spec-box">
-                          <span className="spec-box-icon">🚀</span>
-                          <span className="spec-box-value">{currentCar.extras.acceleration}</span>
-                          <span className="spec-box-label">0-100 km/h</span>
-                        </div>
-                      )}
-                      {currentCar.extras?.traction && (
-                        <div className="spec-box">
-                          <span className="spec-box-icon">🔗</span>
-                          <span className="spec-box-value">{currentCar.extras.traction}</span>
-                          <span className="spec-box-label">Tração</span>
-                        </div>
-                      )}
+                    </div>
+                  )}
+                  {currentCar.extras?.acceleration && (
+                    <div className="spec-item-new">
+                      <span className="spec-item-new-icon">🚀</span>
+                      <div className="spec-item-new-content">
+                        <span className="spec-item-new-label">0-100 km/h</span>
+                        <span className="spec-item-new-value">{currentCar.extras.acceleration}</span>
+                      </div>
+                    </div>
+                  )}
+                  {currentCar.extras?.traction && (
+                    <div className="spec-item-new">
+                      <span className="spec-item-new-icon">🔗</span>
+                      <div className="spec-item-new-content">
+                        <span className="spec-item-new-label">Tração</span>
+                        <span className="spec-item-new-value">{currentCar.extras.traction}</span>
+                      </div>
                     </div>
                   )}
                 </div>
                 
-                {/* Info extra badges */}
+                {/* Info extra badges em linha */}
                 <div className="gallery-info-row">
-                  {currentCar.extras?.ownership && <span className="info-pill">👤 {currentCar.extras.ownership}</span>}
-                  {currentCar.extras?.ipva && <span className="info-pill">📋 IPVA {currentCar.extras.ipva}</span>}
-                  {currentCar.extras?.inspection && <span className="info-pill">✅ {currentCar.extras.inspection}</span>}
-                  {currentCar.extras?.accidentfree && <span className="info-pill">🚗 {currentCar.extras.accidentfree}</span>}
-                  {currentCar.extras?.maintenance && <span className="info-pill">🔑 {currentCar.extras.maintenance}</span>}
+                  {currentCar.extras?.ownership && <span className="info-pill">{currentCar.extras.ownership}</span>}
+                  {currentCar.extras?.ipva && <span className="info-pill">IPVA {currentCar.extras.ipva}</span>}
+                  {currentCar.extras?.inspection && <span className="info-pill">{currentCar.extras.inspection}</span>}
+                  {currentCar.extras?.accidentfree && <span className="info-pill">{currentCar.extras.accidentfree}</span>}
+                  {currentCar.extras?.maintenance && <span className="info-pill">{currentCar.extras.maintenance}</span>}
                 </div>
                 
-                {/* Features */}
-                <div className="gallery-features-grid">
-                  {(currentCar.features || []).slice(0, 6).map((feat, idx) => (
-                    <span key={idx} className="feature-pill">• {feat}</span>
-                  ))}
+                {/* Features em lista */}
+                <div className="features-list">
+                  <h4>Opcionais</h4>
+                  <ul>
+                    {(currentCar.features || []).slice(0, 8).map((feat, idx) => (
+                      <li key={idx}>{feat}</li>
+                    ))}
+                  </ul>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>

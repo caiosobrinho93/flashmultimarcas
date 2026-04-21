@@ -1,19 +1,32 @@
 import { notFound } from 'next/navigation';
 import VehicleDetails from '@/components/VehicleDetails';
-import { vehicles } from '@/lib/data';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface VehiclePageProps {
   params: { id: string };
 }
 
 export async function generateStaticParams() {
-  return vehicles.map((vehicle) => ({
+  const { data: vehicles } = await supabase
+    .from('vehicles')
+    .select('id')
+    .eq('status', 'available');
+
+  return vehicles?.map((vehicle) => ({
     id: vehicle.id,
-  }));
+  })) || [];
 }
 
 export async function generateMetadata({ params }: VehiclePageProps) {
-  const vehicle = vehicles.find(v => v.id === params.id);
+  const { data: vehicle } = await supabase
+    .from('vehicles')
+    .select('*')
+    .eq('id', params.id)
+    .single();
   
   if (!vehicle) {
     return { title: 'Veículo Não Encontrado' };
