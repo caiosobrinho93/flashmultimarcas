@@ -8,24 +8,25 @@ interface IntroProps {
 
 export default function Intro({ onComplete }: IntroProps) {
   const [stage, setStage] = useState(0);
-  const [textVisible, setTextVisible] = useState(false);
+  const [lightning, setLightning] = useState(false);
+  const [flash, setFlash] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 300);
-    const t2 = setTimeout(() => setStage(2), 800);
-    const t3 = setTimeout(() => setTextVisible(true), 1200);
-    const t4 = setTimeout(() => setStage(3), 3500);
-    const t5 = setTimeout(() => setStage(4), 4500);
-    const t6 = setTimeout(() => onComplete(), 5000);
+    const t1 = setTimeout(() => setStage(1), 200);
+    const t2 = setTimeout(() => setFlash(true), 400);
+    const t3 = setTimeout(() => setFlash(false), 500);
+    const t4 = setTimeout(() => setLightning(true), 600);
+    const t5 = setTimeout(() => setLightning(false), 700);
+    const t6 = setTimeout(() => setStage(2), 1200);
+    const t7 = setTimeout(() => setStage(3), 3500);
+    const t8 = setTimeout(() => setStage(4), 4500);
+    const t9 = setTimeout(() => onComplete(), 5000);
 
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-      clearTimeout(t4);
-      clearTimeout(t5);
-      clearTimeout(t6);
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      clearTimeout(t4); clearTimeout(t5); clearTimeout(t6);
+      clearTimeout(t7); clearTimeout(t8); clearTimeout(t9);
     };
   }, [onComplete]);
 
@@ -42,64 +43,92 @@ export default function Intro({ onComplete }: IntroProps) {
         overflow: 'hidden',
       }}
     >
-      {/* Grid effect */}
+      {/* Flash effect */}
+      {flash && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: '#fff',
+          animation: 'flashPop 0.15s ease-out',
+        }} />
+      )}
+
+      {/* Lightning bolt */}
+      {lightning && (
+        <svg 
+          style={{
+            position: 'absolute',
+            top: '10%',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '200px',
+            height: '300px',
+            filter: 'drop-shadow(0 0 30px #00f0ff) drop-shadow(0 0 60px #fff)',
+            animation: 'lightningBolt 0.2s ease-out',
+          }}
+          viewBox="0 0 100 150"
+        >
+          <path 
+            d="M50 0 L20 60 L45 60 L15 150 L85 70 L55 70 L95 0 Z" 
+            fill="#00f0ff"
+            stroke="#fff"
+            strokeWidth="2"
+          />
+        </svg>
+      )}
+
+      {/* Grid background */}
       <div style={{
         position: 'absolute',
         inset: 0,
         background: `
-          linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px)
+          linear-gradient(rgba(0,240,255,0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,240,255,0.05) 1px, transparent 1px)
         `,
-        backgroundSize: '50px 50px',
-        animation: 'gridPulse 2s ease-in-out infinite',
+        backgroundSize: '40px 40px',
       }} />
 
-      {/* Scanline effect */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
-        pointerEvents: 'none',
-      }} />
-
-      {/* Flash text with glitch effect */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        textAlign: 'center',
-      }}>
-        {/* Logo letter F with glow */}
+      {/* Logo when visible */}
+      {stage >= 2 && (
         <div style={{
-          fontFamily: '"Russo One", sans-serif',
-          fontSize: stage >= 2 ? 'clamp(4rem, 15vw, 10rem)' : '0rem',
-          color: '#ffc800',
-          textShadow: stage >= 2 ? `
-            0 0 10px #ffc800,
-            0 0 20px #ffc800,
-            0 0 40px #ffc800,
-            0 0 80px rgba(255,200,0,0.5)
-          ` : 'none',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          opacity: stage >= 2 ? 1 : 0,
-        }}>
-          F
-        </div>
-
-        {/* Text lines with typewriter effect */}
-        <div style={{
-          marginTop: 20,
-          overflow: 'hidden',
-          opacity: textVisible ? 1 : 0,
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+          opacity: stage === 2 ? 1 : 0,
           transition: 'opacity 0.5s ease',
         }}>
+          {/* Logo Image - using same source as header */}
+          <div style={{
+            width: '120px',
+            height: '120px',
+            margin: '0 auto 20px',
+            background: '#ffc800',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: `
+              0 0 20px rgba(255,200,0,0.5),
+              0 0 40px rgba(255,200,0,0.3),
+              0 0 60px rgba(255,200,0,0.1)
+            `,
+            animation: 'logoPulse 2s ease-in-out infinite',
+          }}>
+            <span style={{
+              fontFamily: '"Russo One", sans-serif',
+              fontSize: '64px',
+              color: '#000',
+            }}>F</span>
+          </div>
+          
           <h1 style={{
             fontFamily: '"Russo One", sans-serif',
-            fontSize: 'clamp(1.5rem, 5vw, 3rem)',
+            fontSize: 'clamp(2rem, 6vw, 4rem)',
             color: '#fff',
             textTransform: 'uppercase',
-            letterSpacing: '0.5em',
+            letterSpacing: '0.3em',
             margin: 0,
             textShadow: '0 0 20px rgba(255,255,255,0.5)',
           }}>
@@ -107,40 +136,16 @@ export default function Intro({ onComplete }: IntroProps) {
           </h1>
           <p style={{
             fontFamily: '"Exo 2", sans-serif',
-            fontSize: 'clamp(0.8rem, 2vw, 1.2rem)',
+            fontSize: 'clamp(0.9rem, 2vw, 1.2rem)',
             color: '#00f0ff',
             textTransform: 'uppercase',
-            letterSpacing: '0.3em',
-            margin: '10px 0 0 0',
+            letterSpacing: '0.4em',
+            marginTop: '10px',
             textShadow: '0 0 10px #00f0ff',
           }}>
             Multimarcas
           </p>
         </div>
-      </div>
-
-      {/* Glitch lines */}
-      {stage >= 1 && stage < 4 && (
-        <>
-          <div style={{
-            position: 'absolute',
-            top: '30%',
-            left: 0,
-            right: 0,
-            height: 2,
-            background: 'rgba(0,240,255,0.5)',
-            animation: 'glitchLine 0.3s infinite',
-          }} />
-          <div style={{
-            position: 'absolute',
-            top: '70%',
-            left: 0,
-            right: 0,
-            height: 2,
-            background: 'rgba(255,200,0,0.3)',
-            animation: 'glitchLine 0.4s infinite reverse',
-          }} />
-        </>
       )}
 
       {/* Final fade */}
@@ -150,18 +155,22 @@ export default function Intro({ onComplete }: IntroProps) {
           inset: 0,
           background: '#000',
           animation: stage === 4 ? 'fadeOut 0.8s ease-out forwards' : 'none',
-          opacity: stage === 3 ? 0 : stage === 4 ? undefined : 0,
         }} />
       )}
 
       <style>{`
-        @keyframes gridPulse {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 1; }
+        @keyframes flashPop {
+          0% { opacity: 1; }
+          100% { opacity: 0; }
         }
-        @keyframes glitchLine {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+        @keyframes lightningBolt {
+          0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+          50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+          100% { opacity: 0; transform: translateX(-50%) scale(1); }
+        }
+        @keyframes logoPulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
         }
         @keyframes fadeOut {
           from { opacity: 1; }

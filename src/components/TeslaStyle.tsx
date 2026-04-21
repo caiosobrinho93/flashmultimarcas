@@ -77,22 +77,25 @@ const goNext = () => {
 
   const changeImage = (direction: number) => {
     if (isTransitioning) return;
+    if (!currentCar.images || currentCar.images.length <= 1) return;
+    
     setIsTransitioning(true);
-    setZoomLevel(150);
-    setTimeout(() => setZoomLevel(100), 600);
+    setZoomLevel(140);
+    
     setTimeout(() => {
-      if (currentCar.images) {
-        setCurrentImageIndex(prev => {
-          const newIndex = direction === 1 
-            ? (prev + 1) % currentCar.images!.length
-            : prev === 0 ? currentCar.images!.length - 1 : prev - 1;
-          return newIndex;
-        });
-      }
-    }, 300);
+      setCurrentImageIndex(prev => {
+        if (direction === 1) {
+          return (prev + 1) % currentCar.images!.length;
+        } else {
+          return prev === 0 ? currentCar.images!.length - 1 : prev - 1;
+        }
+      });
+      setZoomLevel(100);
+    }, 400);
+    
     setTimeout(() => {
       setIsTransitioning(false);
-    }, 800);
+    }, 600);
   };
 
   const scrollToCar = (index: number) => {
