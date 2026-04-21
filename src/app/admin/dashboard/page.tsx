@@ -2,14 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase, tables } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import { Vehicle, Lead } from '@/types';
+
+const supabaseUrl = 'https://ngmcmamyiljczmselrcp.supabase.co';
+const supabaseAnonKey = 'sb_publishable_uSPLC9knj9B9DnHtv4gcUg_lO_50uNv';
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function Dashboard() {
   const router = useRouter();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'vehicles' | 'leads'>('vehicles');
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -27,13 +32,16 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
+      setError(null);
       const [vehiclesRes, leadsRes] = await Promise.all([
-        supabase.from(tables.vehicles).select('*').order('created_at', { ascending: false }),
-        supabase.from(tables.leads).select('*').order('created_at', { ascending: false })
+        supabase.from('vehicles').select('*').order('created_at', { ascending: false }),
+        supabase.from('leads').select('*').order('created_at', { ascending: false })
       ]);
 
-      if (vehiclesRes.data) {
-        setVehicles(vehiclesRes.data.map(v => ({
+      if (vehiclesRes.error) {
+        setError('Erro ao carregar veículos: ' + vehiclesRes.error.message);
+      } else if (vehiclesRes.data) {
+        setVehicles(vehiclesRes.data.map((v: any) => ({
           id: v.id,
           model: v.model,
           brand: v.brand,
@@ -54,7 +62,7 @@ export default function Dashboard() {
       }
 
       if (leadsRes.data) {
-        setLeads(leadsRes.data.map(l => ({
+        setLeads(leadsRes.data.map((l: any) => ({
           id: l.id,
           vehicleId: l.vehicle_id,
           vehicleModel: l.vehicle_model,
@@ -92,9 +100,9 @@ export default function Dashboard() {
       };
 
       if (editingVehicle?.id) {
-        await supabase.from(tables.vehicles).update(vehicleData).eq('id', editingVehicle.id);
+        await supabase.from('vehicles').update(vehicleData).eq('id', editingVehicle.id);
       } else {
-        await supabase.from(tables.vehicles).insert([{ ...vehicleData, created_at: new Date().toISOString() }]);
+        await supabase.from('vehicles').insert([{ ...vehicleData, created_at: new Date().toISOString() }]);
       }
 
       setShowModal(false);
@@ -112,7 +120,7 @@ export default function Dashboard() {
     if (!confirm('Tem certeza que deseja excluir este veículo?')) return;
     setDeleting(id);
     try {
-      await supabase.from(tables.vehicles).delete().eq('id', id);
+      await supabase.from('vehicles').delete().eq('id', id);
       fetchData();
     } catch (error) {
       console.error('Error deleting vehicle:', error);
@@ -123,7 +131,7 @@ export default function Dashboard() {
 
   const handleStatusChange = async (id: string, newStatus: 'available' | 'sold' | 'reserved') => {
     try {
-      await supabase.from(tables.vehicles).update({ status: newStatus }).eq('id', id);
+      await supabase.from('vehicles').update({ status: newStatus }).eq('id', id);
       fetchData();
     } catch (error) {
       console.error('Error updating status:', error);

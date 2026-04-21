@@ -8,26 +8,43 @@ interface IntroProps {
 }
 
 export default function Intro({ onComplete }: IntroProps) {
-  const [stage, setStage] = useState<'start' | 'fadein' | 'hold' | 'fadeout' | 'done'>('start');
+  const [stage, setStage] = useState(0);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage('fadein'), 100);
-    const t2 = setTimeout(() => setStage('hold'), 1200);
-    const t3 = setTimeout(() => setStage('fadeout'), 3200);
-    const t4 = setTimeout(() => setStage('done'), 4000);
-    const t5 = setTimeout(() => onComplete(), 4200);
+    const t1 = setTimeout(() => setStage(1), 100);
+    const t2 = setTimeout(() => setStage(2), 1500);
+    const t3 = setTimeout(() => setStage(3), 2800);
+    const t4 = setTimeout(() => setStage(4), 3800);
 
     return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
-      clearTimeout(t4); clearTimeout(t5);
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4);
     };
   }, [onComplete]);
 
-  if (stage === 'done') return null;
+  useEffect(() => {
+    if (stage === 4) {
+      setIsFadingOut(true);
+      const t = setTimeout(() => onComplete(), 800);
+      return () => clearTimeout(t);
+    }
+  }, [stage, onComplete]);
 
-  const isVisible = stage === 'fadein' || stage === 'hold';
-  const isFadingOut = stage === 'fadeout';
+  if (isFadingOut) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        background: '#000',
+        opacity: 1,
+        transition: 'opacity 0.8s ease-out',
+      }} />
+    );
+  }
+
+  const showLogo = stage >= 1;
 
   return (
     <div 
@@ -37,12 +54,8 @@ export default function Intro({ onComplete }: IntroProps) {
         inset: 0,
         zIndex: 9999,
         background: '#000',
-        overflow: 'hidden',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: isFadingOut ? 0 : 1,
-        transition: 'opacity 0.8s ease-in-out',
+        transition: isFadingOut ? 'opacity 0.8s ease-out' : (stage >= 3 ? 'opacity 1s ease-out' : 'none'),
+        opacity: isFadingOut ? 1 : (stage >= 3 ? 0 : 1),
       }}
     >
       {/* Grid effect */}
@@ -50,22 +63,20 @@ export default function Intro({ onComplete }: IntroProps) {
         position: 'absolute',
         inset: 0,
         background: `
-          linear-gradient(rgba(255,200,0,0.02) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,200,0,0.02) 1px, transparent 1px)
+          linear-gradient(rgba(255,200,0,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,200,0,0.03) 1px, transparent 1px)
         `,
         backgroundSize: '50px 50px',
-        opacity: isVisible ? 0.5 : 0,
-        transition: 'opacity 0.5s ease',
       }} />
 
-      {/* Logo with fade effect */}
+      {/* Logo */}
       <div style={{
-        opacity: isVisible ? 1 : 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        transform: isVisible ? 'scale(1)' : 'scale(0.9)',
-        transition: 'all 1s ease-in-out',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        opacity: showLogo ? 1 : 0,
+        transition: 'opacity 1s ease-in-out',
       }}>
         <div style={{
           position: 'relative',
