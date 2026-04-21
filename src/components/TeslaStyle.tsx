@@ -367,7 +367,7 @@ const goNext = () => {
             
             {/* Features */}
             <div className="gallery-features-grid">
-              {currentCar.features.slice(0, 6).map((feat, idx) => (
+              {(currentCar.features || []).slice(0, 6).map((feat, idx) => (
                 <span key={idx} className="feature-pill">{feat}</span>
               ))}
             </div>

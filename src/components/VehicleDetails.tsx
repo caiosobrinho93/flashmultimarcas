@@ -147,7 +147,7 @@ export default function VehicleDetails({ vehicle }: VehicleDetailsProps) {
               <div className="glass p-5">
                 <h3 className="text-yellow font-russo mb-4">OPCIONAIS</h3>
                 <div className="feature-list">
-                  {vehicle.features.map((feature, idx) => (
+                  {(vehicle.features || []).map((feature, idx) => (
                     <span key={idx} className="feature-tag">{feature}</span>
                   ))}
                 </div>

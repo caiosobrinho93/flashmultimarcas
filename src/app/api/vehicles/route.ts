@@ -1,21 +1,40 @@
 import { NextResponse } from 'next/server';
-import { vehicles as initialVehicles, ADMIN_CREDENTIALS } from '@/lib/data';
+import { vehicleRepo, initializeDB, authRepo } from '@/lib/db';
+import { vehicles as initialVehicles } from '@/lib/data';
 
-let vehicles = [...initialVehicles];
+initializeDB({ vehicles: initialVehicles, leads: [] });
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const status = searchParams.get('status');
   
-  let filtered = vehicles;
-  if (status) {
-    filtered = vehicles.filter(v => v.status === status);
+  const filters = {
+    brand: searchParams.get('brand') || undefined,
+    model: searchParams.get('model') || undefined,
+    minPrice: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
+    maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
+    year: searchParams.get('year') ? Number(searchParams.get('year')) : undefined,
+    fuel: searchParams.get('fuel') || undefined,
+    transmission: searchParams.get('transmission') || undefined,
+    status: (searchParams.get('status') as 'available' | 'sold' | 'reserved') || undefined,
+  };
+  
+  const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
+  const limit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 12;
+  const search = searchParams.get('search') || undefined;
+  
+  let result;
+  
+  if (search) {
+    const data = await vehicleRepo.search(search);
+    result = { data, total: data.length, page: 1, limit: data.length, totalPages: 1 };
+  } else {
+    result = await vehicleRepo.findAll(filters, page, limit);
   }
   
-  return NextResponse.json(filtered);
+  return NextResponse.json(result);
 }
 
-export async function PUT(request: Request) {
+export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get('authorization');
     
@@ -27,25 +46,16 @@ export async function PUT(request: Request) {
     const decoded = Buffer.from(credentials, 'base64').toString('utf-8');
     const [username, password] = decoded.split(':');
     
-    if (username !== ADMIN_CREDENTIALS.username || password !== ADMIN_CREDENTIALS.password) {
+    const isValid = await authRepo.validate(username, password);
+    
+    if (!isValid) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
     const body = await request.json();
-    const { id, status: newStatus } = body;
+    const vehicle = await vehicleRepo.create(body);
     
-    const vehicleIndex = vehicles.findIndex(v => v.id === id);
-    
-    if (vehicleIndex === -1) {
-      return NextResponse.json({ error: 'Vehicle not found' }, { status: 404 });
-    }
-    
-    vehicles[vehicleIndex] = {
-      ...vehicles[vehicleIndex],
-      status: newStatus,
-    };
-    
-    return NextResponse.json(vehicles[vehicleIndex]);
+    return NextResponse.json(vehicle, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

@@ -110,7 +110,7 @@ export default function GaragePro({ vehicles }: GarageProProps) {
         <div className="garage-pro-features">
           <h3>OPCIONAIS</h3>
           <div className="feature-tags">
-            {currentCar.features.slice(0, 6).map((feat, idx) => (
+            {(currentCar.features || []).slice(0, 6).map((feat, idx) => (
               <span key={idx} className="feature-tag">{feat}</span>
             ))}
           </div>

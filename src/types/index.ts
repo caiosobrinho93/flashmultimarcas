@@ -10,9 +10,9 @@ export interface Vehicle {
   color: string;
   imageUrl: string;
   images?: string[];
-  status: 'available' | 'sold';
-  description: string;
-  features: string[];
+  status: 'available' | 'sold' | 'reserved';
+  description?: string;
+  features?: string[];
   createdAt: string;
   extras?: VehicleExtra;
 }
@@ -70,4 +70,12 @@ export interface Lead {
 export interface AdminUser {
   username: string;
   password: string;
+}
+
+export interface StoreInfo {
+  name?: string;
+  address?: string;
+  phone?: string;
+  whatsapp?: string;
+  instagram?: string;
 }
