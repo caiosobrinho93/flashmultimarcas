@@ -79,6 +79,22 @@ const goToCar = (index: number) => {
     }, 100);
   }, []);
 
+  useEffect(() => {
+    const autoScroll = setInterval(() => {
+      if (scrollRef.current) {
+        const nextIndex = (centerIndex + 1) % vehicles.length;
+        const nextItem = scrollRef.current.children[nextIndex] as HTMLElement;
+        if (nextItem) {
+          nextItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          setCenterIndex(nextIndex);
+          setIsHeroFading(true);
+          setTimeout(() => setIsHeroFading(false), 400);
+        }
+      }
+    }, 6000);
+    return () => clearInterval(autoScroll);
+  }, [centerIndex, vehicles.length]);
+
   return (
     <div className="tesla-wrapper">
       {/* Header */}
@@ -155,6 +171,17 @@ const goToCar = (index: number) => {
           <div className="car-model-sub">
             <span className="car-year">{currentCar.year}</span>
             <span className="car-brand">{currentCar.brand}</span>
+            <button 
+              type="button" 
+              className="details-mini-btn"
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-11z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              Ver detalhes
+            </button>
           </div>
         </div>
         <button 
@@ -172,10 +199,6 @@ const goToCar = (index: number) => {
 
       {/* Thumbnails Bar - Novo Design */}
       <div className="thumbnails-bar">
-        <button className="thumb-nav-corner left-corner" onClick={() => scrollToCar(Math.max(0, centerIndex - 1))}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 19l-7-7 7-7" /></svg>
-        </button>
-        
         <div className="thumbnails-track-new" ref={scrollRef}>
           {vehicles.map((car, idx) => (
             <button 
@@ -189,10 +212,6 @@ const goToCar = (index: number) => {
             </button>
           ))}
         </div>
-        
-        <button className="thumb-nav-corner right-corner" onClick={() => scrollToCar(Math.min(vehicles.length - 1, centerIndex + 1))}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 5l7 7-7 7" /></svg>
-        </button>
       </div>
 
       {/* Hero Main */}
