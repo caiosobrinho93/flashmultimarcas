@@ -789,8 +789,19 @@ body {
   gap: 2px;
 }
 
-.car-model {
-  display: none;
+/* Car Info Bar - TOPO ESQUERDO */
+.car-info-bar {
+  position: fixed;
+  top: 80px;
+  left: 30px;
+  right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  z-index: 10;
+  padding: 0;
+  max-width: 100vw;
 }
 
 .car-model-gamer {
@@ -812,29 +823,14 @@ body {
 }
 
 .car-model-gamer-fire {
-  position: absolute;
-  bottom: -5px;
-  left: -10%;
-  width: 120%;
-  height: 40px;
-  background: linear-gradient(0deg, rgba(255, 100, 0, 0.8) 0%, rgba(255, 200, 0, 0.6) 40%, transparent 100%);
-  filter: blur(8px);
-  animation: fire-glow 0.5s ease-in-out infinite alternate;
-  transform: skewX(-10deg);
-  z-index: 1;
-  border-radius: 0 0 50% 50%;
-}
-
-@keyframes fire-glow {
-  0% { opacity: 0.6; height: 35px; }
-  100% { opacity: 1; height: 45px; }
+  display: none;
 }
 
 .car-model-sub {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 15px;
+  margin-top: 8px;
   transform: skewX(-10deg);
 }
 
@@ -853,10 +849,6 @@ body {
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 2px;
-}
-
-.car-model-line {
-  display: none;
 }
 
 /* Action Button */
@@ -1005,14 +997,12 @@ body {
 
 @media (max-width: 768px) {
   .car-info-bar {
-    padding: 0 30px;
-    bottom: 90px;
+    top: 60px;
+    left: 15px;
+    padding: 0;
   }
   .car-model-gamer {
     font-size: 2.8rem;
-  }
-  .car-model-gamer-fire {
-    height: 25px;
   }
   .car-model-sub .car-year {
     font-size: 0.9rem;
@@ -1024,6 +1014,9 @@ body {
   .action-button {
     width: 40px;
     height: 40px;
+    position: fixed;
+    top: 15px;
+    right: 15px;
   }
 }
 

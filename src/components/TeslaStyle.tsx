@@ -94,6 +94,12 @@ const goNext = () => {
 
   const scrollToCar = (index: number) => {
     goToCar(index);
+    setTimeout(() => {
+      if (scrollRef.current && scrollRef.current.children[index]) {
+        const item = scrollRef.current.children[index] as HTMLElement;
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }, 100);
   };
 
   useEffect(() => {
@@ -103,6 +109,13 @@ const goNext = () => {
     }, 8000);
     return () => clearInterval(autoPlay);
   }, [detailsModalOpen, goNext]);
+
+  useEffect(() => {
+    if (scrollRef.current && scrollRef.current.children[currentIndex]) {
+      const item = scrollRef.current.children[currentIndex] as HTMLElement;
+      item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [currentIndex]);
 
   return (
     <div className="tesla-wrapper">
