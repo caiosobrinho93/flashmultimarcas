@@ -170,15 +170,17 @@ const goNext = () => {
         </div>
       </div>
 
-      {/* Car Info Bar */}
+      {/* Car Info Bar - NOVO DESIGN GAMER */}
       <div className="car-info-bar">
         <div className="car-name-group">
-          <span className="car-model">{currentCar.model}</span>
-          <div className="car-model-info">
-            <span className="car-brand">{currentCar.brand}</span>
-            <span className="car-year">{currentCar.year}</span>
+          <div className="car-model-gamer">
+            <span>{currentCar.model}</span>
+            <div className="car-model-gamer-fire" />
           </div>
-          <div className="car-model-line" />
+          <div className="car-model-sub">
+            <span className="car-year">{currentCar.year}</span>
+            <span className="car-brand">{currentCar.brand}</span>
+          </div>
         </div>
         <button 
           type="button" 

@@ -790,37 +790,73 @@ body {
 }
 
 .car-model {
-  font-family: 'Russo One', sans-serif;
-  font-size: 2.6rem;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  line-height: 1;
-  min-height: 2.6rem;
-  display: flex;
-  align-items: flex-end;
-  padding-bottom: 4px;
+  display: none;
 }
 
-.car-model-info {
+.car-model-gamer {
+  position: relative;
+  display: inline-block;
+  font-family: 'Russo One', sans-serif;
+  font-size: 5.6rem;
+  color: #ffc800;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 0.8;
+  text-shadow: 0 0 20px rgba(255, 200, 0, 0.8), 0 0 40px rgba(255, 200, 0, 0.4);
+  transform: skewX(-10deg);
+}
+
+.car-model-gamer span {
+  position: relative;
+  z-index: 2;
+}
+
+.car-model-gamer-fire {
+  position: absolute;
+  bottom: -5px;
+  left: -10%;
+  width: 120%;
+  height: 40px;
+  background: linear-gradient(0deg, rgba(255, 100, 0, 0.8) 0%, rgba(255, 200, 0, 0.6) 40%, transparent 100%);
+  filter: blur(8px);
+  animation: fire-glow 0.5s ease-in-out infinite alternate;
+  transform: skewX(-10deg);
+  z-index: 1;
+  border-radius: 0 0 50% 50%;
+}
+
+@keyframes fire-glow {
+  0% { opacity: 0.6; height: 35px; }
+  100% { opacity: 1; height: 45px; }
+}
+
+.car-model-sub {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  margin-top: 15px;
+  transform: skewX(-10deg);
+}
+
+.car-model-sub .car-year {
+  background: #ffc800;
+  color: #000;
+  padding: 6px 20px;
+  font-family: 'Russo One', sans-serif;
+  font-size: 1.2rem;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
+}
+
+.car-model-sub .car-brand {
+  color: #fff;
+  font-family: 'Russo One', sans-serif;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .car-model-line {
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, #ffc800 0%, #ffc800 30%, transparent 100%);
-  margin-top: 4px;
-  border-radius: 2px;
-}
-
-.car-brand, .car-year {
-  font-family: 'Russo One', sans-serif;
-  font-size: 1rem;
-  color: var(--yellow);
-  text-transform: uppercase;
+  display: none;
 }
 
 /* Action Button */
@@ -953,14 +989,14 @@ body {
   
   .thumb-item-new {
     width: 55px;
-    height: 38px;
+    height: 70px;
   }
   
   .thumb-nav-corner {
     width: 32px;
-    height: 60px;
+    height: 80px;
   }
-  
+   
   .thumb-nav-corner svg {
     width: 16px;
     height: 16px;
@@ -970,13 +1006,20 @@ body {
 @media (max-width: 768px) {
   .car-info-bar {
     padding: 0 30px;
-    bottom: 75px;
+    bottom: 90px;
   }
-  .car-model {
-    font-size: 1.3rem;
+  .car-model-gamer {
+    font-size: 2.8rem;
   }
-  .car-brand, .car-year {
-    font-size: 0.8rem;
+  .car-model-gamer-fire {
+    height: 25px;
+  }
+  .car-model-sub .car-year {
+    font-size: 0.9rem;
+    padding: 4px 12px;
+  }
+  .car-model-sub .car-brand {
+    font-size: 0.75rem;
   }
   .action-button {
     width: 40px;
