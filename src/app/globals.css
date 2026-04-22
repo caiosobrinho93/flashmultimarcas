@@ -874,24 +874,23 @@ body {
   display: none;
 }
 
-.thumb-item-new {
-  flex-shrink: 0;
+.thumb-item-new {  flex-shrink: 0;
   width: 70px;
-  height: 45px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid transparent;
+  height: 45px;  border-radius: 8px;
+  overflow: hidden;  border: 2px solid transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
-  background: none;
-  opacity: 0.5;
-  transform: scale(0.9);
-}
+  transition: all 0.3s ease;  padding: 0;
+  background: none;  opacity: 0.5;
+  transform: scale(0.9);}
 
-.thumb-item-new:hover {
-  opacity: 0.8;
+.thumb-item-new:hover {  opacity: 0.8;
   transform: scale(0.95);
+}.thumb-item-new.active,
+.thumb-item-new[class="thumb-item-new active"] {
+  opacity: 1 !important;  border-color: #ffc800 !important;
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.8), inset 0 0 10px rgba(255, 200, 0, 0.3) !important;
+  transform: scale(1.05) !important;
+}
 }
 
 .thumb-img-new {
@@ -1085,8 +1084,16 @@ body {
 }
 
 .thumb-item.active {
-  border-color: var(--cyan);
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+  border-color: #ffc800;
+  box-shadow: 0 0 15px rgba(255, 200, 0, 0.5);
+}
+
+/* Thumbnails Novo */
+.thumb-item-new.active {
+  border-color: #ffc800 !important;
+  opacity: 1 !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 25px rgba(255, 200, 0, 0.8), inset 0 0 15px rgba(255, 200, 0, 0.4) !important;
 }
 
 .thumb-img {
