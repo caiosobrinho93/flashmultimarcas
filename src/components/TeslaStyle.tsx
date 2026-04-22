@@ -23,26 +23,30 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
   const [carEffect, setCarEffect] = useState(2);
   const [searchTerm, setSearchTerm] = useState('');
   const zoomOptions = [100, 150, 200, 300, 400];
-  const scrollRef = useRef<HTMLDivElement>(null);
+const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollPosRef = useRef(0);
+  const animationRef = useRef<number>();
+  const lastTimeRef = useRef(performance.now());
+  const centerIndexRef = useRef(0);
+  const animateFnRef = useRef<((time: number) => void) | null>(null);
 
-  const currentCar = vehicles[centerIndex];
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
-
-const goToCar = (index: number) => {
-    if (index === centerIndex) return;
+  const goToCar = (index: number) => {
+    if (index < 0 || index >= vehicles.length) return;
+    scrollPosRef.current = index * 100;
+    if (scrollRef.current) {
+      const item = scrollRef.current.children[index] as HTMLElement;
+      if (item) item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
     setCenterIndex(index);
     setIsHeroFading(true);
-    setTimeout(() => {
-      setIsHeroFading(false);
-    }, 600);
+    setTimeout(() => setIsHeroFading(false), 600);
   };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
+  };
+
+  const currentCar = vehicles[centerIndex];
 
   const handleWhatsapp = () => {
     const message = encodeURIComponent(
@@ -60,14 +64,8 @@ const goToCar = (index: number) => {
         return prev === 0 ? currentCar.images!.length - 1 : prev - 1;
       }
     });
-  };
-
-  const scrollToCar = (index: number) => {
-    setCenterIndex(index);
-    setIsHeroFading(true);
-    setTimeout(() => {
-      setIsHeroFading(false);
-    }, 400);
+    setIsImgFading(true);
+    setTimeout(() => setIsImgFading(false), 300);
   };
 
   useEffect(() => {
@@ -80,20 +78,77 @@ const goToCar = (index: number) => {
   }, []);
 
   useEffect(() => {
-    const autoScroll = setInterval(() => {
-      if (scrollRef.current) {
-        const nextIndex = (centerIndex + 1) % vehicles.length;
-        const nextItem = scrollRef.current.children[nextIndex] as HTMLElement;
-        if (nextItem) {
-          nextItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-          setCenterIndex(nextIndex);
-          setIsHeroFading(true);
-          setTimeout(() => setIsHeroFading(false), 400);
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const itemWidth = 100;
+    const totalItems = vehicles.length;
+    const totalWidth = totalItems * itemWidth;
+    const speed = 0.3;
+    let lastTime = performance.now();
+
+    const checkCenterItem = () => {
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      let closestIdx = 0;
+      let closestDist = Infinity;
+      Array.from(container.children).forEach((child, idx) => {
+        const childRect = (child as HTMLElement).getBoundingClientRect();
+        const childCenter = childRect.left + childRect.width / 2;
+        const dist = Math.abs(containerCenter - childCenter);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIdx = idx % totalItems;
         }
+      });
+      if (closestIdx !== centerIndexRef.current) {
+        centerIndexRef.current = closestIdx;
+        setCenterIndex(closestIdx);
+        setIsHeroFading(true);
+        setTimeout(() => setIsHeroFading(false), 400);
       }
-    }, 6000);
-    return () => clearInterval(autoScroll);
-  }, [centerIndex, vehicles.length]);
+    };
+
+    const animate = (currentTime: number) => {
+      const delta = currentTime - lastTime;
+      lastTime = currentTime;
+      scrollPosRef.current += speed * delta;
+
+      if (scrollPosRef.current >= totalWidth) {
+        scrollPosRef.current = 0;
+        container.scrollLeft = 0;
+      } else {
+        container.scrollLeft = scrollPosRef.current;
+      }
+
+      checkCenterItem();
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animateFnRef.current = animate;
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [vehicles.length]);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const handleHover = () => cancelAnimationFrame(animationRef.current!);
+    const handleLeave = () => {
+      lastTimeRef.current = performance.now();
+      if (animateFnRef.current) {
+        animationRef.current = requestAnimationFrame(animateFnRef.current);
+      }
+    };
+    container.addEventListener('mouseenter', handleHover);
+    container.addEventListener('mouseleave', handleLeave);
+    return () => {
+      container.removeEventListener('mouseenter', handleHover);
+      container.removeEventListener('mouseleave', handleLeave);
+    };
+  }, []);
 
   return (
     <div className="tesla-wrapper">
