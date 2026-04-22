@@ -9,7 +9,8 @@ interface IntroProps {
 
 export default function Intro({ onComplete }: IntroProps) {
   const [stage, setStage] = useState(0);
-  const [slideOut, setSlideOut] = useState(false);
+  const [bgSlideOut, setBgSlideOut] = useState(false);
+  const [logoFade, setLogoFade] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,11 +26,12 @@ export default function Intro({ onComplete }: IntroProps) {
 
   useEffect(() => {
     if (stage === 4) {
+      setLogoFade(true);
       const t = setTimeout(() => {
-        setSlideOut(true);
+        setBgSlideOut(true);
         const t2 = setTimeout(() => onComplete(), 1200);
         return () => clearTimeout(t2);
-      }, 300);
+      }, 600);
       return () => clearTimeout(t);
     }
   }, [stage, onComplete]);
@@ -44,7 +46,7 @@ export default function Intro({ onComplete }: IntroProps) {
         inset: 0,
         zIndex: 9999,
         background: '#000',
-        transform: slideOut ? 'translateX(-100%)' : 'translateX(0)',
+        transform: bgSlideOut ? 'translateX(-100%)' : 'translateX(0)',
         transition: 'transform 1s ease-in-out',
         pointerEvents: 'none',
       }}
@@ -60,14 +62,14 @@ export default function Intro({ onComplete }: IntroProps) {
         backgroundSize: '50px 50px',
       }} />
 
-      {/* Logo */}
+      {/* Logo com fadeout */}
       <div style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        opacity: showLogo ? 1 : 0,
-        transition: 'opacity 1s ease-in-out',
+        opacity: logoFade ? 0 : (showLogo ? 1 : 0),
+        transition: 'opacity 0.6s ease-out',
       }}>
         <div style={{
           position: 'relative',

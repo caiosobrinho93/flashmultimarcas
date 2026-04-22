@@ -792,7 +792,7 @@ body {
 /* Car Info Bar - TOPO ESQUERDO */
 .car-info-bar {
   position: fixed;
-  top: 80px;
+  top: 130px;
   left: 30px;
   right: auto;
   display: flex;
@@ -822,10 +822,6 @@ body {
   z-index: 2;
 }
 
-.car-model-gamer-fire {
-  display: none;
-}
-
 .car-model-sub {
   display: flex;
   align-items: center;
@@ -837,9 +833,9 @@ body {
 .car-model-sub .car-year {
   background: #ffc800;
   color: #000;
-  padding: 6px 20px;
+  padding: 4px 16px;
   font-family: 'Russo One', sans-serif;
-  font-size: 1.2rem;
+  font-size: 1rem;
   clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
 }
 
@@ -997,19 +993,19 @@ body {
 
 @media (max-width: 768px) {
   .car-info-bar {
-    top: 60px;
+    top: 90px;
     left: 15px;
     padding: 0;
   }
   .car-model-gamer {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
   }
   .car-model-sub .car-year {
-    font-size: 0.9rem;
-    padding: 4px 12px;
+    font-size: 0.8rem;
+    padding: 3px 12px;
   }
   .car-model-sub .car-brand {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
   .action-button {
     width: 40px;
