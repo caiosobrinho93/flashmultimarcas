@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { storeInfo } from '@/lib/data';
 
@@ -14,12 +14,6 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'Flash Multimarcas',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
   openGraph: {
     title: storeInfo.name,
     description: `Carros em Votuporanga/SP`,
@@ -27,6 +21,13 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     siteName: storeInfo.name,
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
