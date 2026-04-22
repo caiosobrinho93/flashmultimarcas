@@ -64,51 +64,19 @@ const goToCar = (index: number) => {
 
   const scrollToCar = (index: number) => {
     setCenterIndex(index);
+    setIsHeroFading(true);
     setTimeout(() => {
-      if (scrollRef.current && scrollRef.current.children[index]) {
-        const item = scrollRef.current.children[index] as HTMLElement;
-        item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }, 50);
+      setIsHeroFading(false);
+    }, 400);
   };
 
   useEffect(() => {
-    if (detailsModalOpen) return;
-    const autoPlay = setInterval(() => {
-      setCenterIndex(prev => (prev + 1) % vehicles.length);
-    }, 8000);
-    return () => clearInterval(autoPlay);
-  }, [detailsModalOpen]);
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      const track = scrollRef.current;
-      const checkCenter = () => {
-        const trackRect = track.getBoundingClientRect();
-        const centerX = trackRect.left + trackRect.width / 2;
-        
-        Array.from(track.children).forEach((child, idx) => {
-          const item = child as HTMLElement;
-          const itemRect = item.getBoundingClientRect();
-          const itemCenterX = itemRect.left + itemRect.width / 2;
-          if (Math.abs(itemCenterX - centerX) < itemRect.width * 0.6) {
-            if (centerIndex !== idx) {
-              setCenterIndex(idx);
-              setIsHeroFading(true);
-              setTimeout(() => setIsHeroFading(false), 400);
-            }
-          }
-        });
-      };
-      
-      track.addEventListener('scroll', checkCenter);
-      const interval = setInterval(checkCenter, 200);
-      checkCenter();
-      return () => {
-        track.removeEventListener('scroll', checkCenter);
-        clearInterval(interval);
-      };
-    }
+    setTimeout(() => {
+      const firstItem = scrollRef.current?.children[0] as HTMLElement;
+      if (firstItem) {
+        firstItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }, 100);
   }, []);
 
   return (

@@ -892,17 +892,14 @@ body {
 .thumbnails-track-new {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 0;
+  justify-content: center;
+  gap: 8px;
   overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 0 50px;
-  max-width: 100vw;
+  padding: 15px 50px;
+  max-width: calc(100vw - 100px);
   scrollbar-width: none;
   -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
 }
 
 .thumbnails-track-new::-webkit-scrollbar {
@@ -911,26 +908,30 @@ body {
 
 .thumb-item-new {
   flex-shrink: 0;
-  width: 120px;
-  height: 140px;
-  border-radius: 12px;
+  width: 80px;
+  height: 100px;
+  border-radius: 8px;
   overflow: hidden;
-  border: 3px solid rgba(255,255,255,0.2);
+  border: 2px solid transparent;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  scroll-snap-align: center;
-  position: relative;
-  transform: scale(0.85);
+  transition: all 0.3s ease;
+  background: none;
   opacity: 0.5;
+  transform: scale(0.9);
 }
 
 .thumb-item-new:hover {
-  transform: scale(0.95);
   opacity: 0.8;
-  border-color: rgba(255,200,0,0.4);
+  transform: scale(0.95);
 }
 
 .thumb-item-new.active,
+.thumb-item-new[class="thumb-item-new active"] {
+  opacity: 1 !important;
+  border-color: #ffc800 !important;
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.8) !important;
+  transform: scale(1.05) !important;
+}
 .thumb-item-new[class="thumb-item-new active"] {
   opacity: 1 !important;
   border-color: #ffc800 !important;
