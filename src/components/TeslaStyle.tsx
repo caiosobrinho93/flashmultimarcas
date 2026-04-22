@@ -195,11 +195,10 @@ useEffect(() => {
               className="details-mini-btn"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="12" height="12">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-11z"/>
                 <circle cx="12" cy="12" r="3"/>
               </svg>
-              Ver detalhes
             </button>
           </div>
         </div>
@@ -223,17 +222,21 @@ useEffect(() => {
       </div>
 
       {/* Hero Main */}
-      <main 
-          className={`tesla-hero ${isHeroFading ? 'fading' : ''} effect-${carEffect}`} 
+      <div className="tesla-hero-container">
+        <div 
+          className={`tesla-hero tesla-hero-old ${isHeroFading ? 'fading-out' : ''}`}
           style={{ backgroundImage: `url(/flashmultimarcas${currentCar.imageUrl})` }}
-        >
-
+        />
+        <div 
+          className={`tesla-hero tesla-hero-new ${isHeroFading ? '' : 'visible'}`}
+          style={{ backgroundImage: `url(/flashmultimarcas${currentCar.imageUrl})` }}
+        />
         <div className="hero-dots">
           {vehicles.map((_, idx) => (
             <button key={idx} className={`dot ${idx === centerIndex ? 'active' : ''}`} onClick={() => goToCar(idx)} />
           ))}
         </div>
-      </main>
+      </div>
 
       {/* Details Modal - Novo Layout */}
       <div className={`gallery-modal ${detailsModalOpen ? 'open' : ''}`} style={{ zIndex: 50 }}>

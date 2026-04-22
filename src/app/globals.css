@@ -296,86 +296,46 @@ body {
 }
 
 /* ===== HERO ===== */
-.tesla-hero {
+.tesla-hero-container {
   position: relative;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
+}
+
+.tesla-hero {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  z-index: 1;
   pointer-events: none;
-  transition: opacity 0.8s ease-in-out, filter 0.8s ease-in-out;
-  filter: contrast(1.1) brightness(1.05);
+  transition: opacity 0.5s ease-in-out;
 }
 
-.tesla-hero.fading {
+.tesla-hero-old {
+  z-index: 1;
+  opacity: 1;
+}
+
+.tesla-hero-old.fading-out {
   opacity: 0;
 }
 
-.tesla-hero.transition-effect {
-  animation: hero-transition-zoomed 1s ease-in-out forwards;
+.tesla-hero-new {
+  z-index: 2;
+  opacity: 0;
 }
 
-@keyframes hero-transition-zoomed {
-  0% { filter: brightness(1) contrast(1.1); background-position: 50% 50%; }
-  50% { filter: brightness(1.3) contrast(1.2); background-position: 55% 50%; }
-  100% { filter: brightness(0) contrast(1); background-position: 62% 50%; }
-}
-
-@keyframes hero-transition {
-  0% { filter: brightness(1) contrast(1.1); background-position: 52% 50%; }
-  50% { filter: brightness(1.3) contrast(1.2); }
-  100% { filter: brightness(0); background-position: 52% 50%; }
-}
-
-/* Efeitos */
-.tesla-hero.effect-0 {
-  animation: hero-glow 10s ease-in-out infinite;
-}
-
-.tesla-hero.effect-1 {
-  animation: hero-contrast 10s ease-in-out infinite;
-}
-
-.tesla-hero.effect-2 {
-  animation: hero-zoom-move 30s linear infinite !important;
-  background-size: cover !important;
-}
-
-.tesla-hero.effect-3 {
-  animation: hero-zoom-move-right 30s linear infinite !important;
-  background-size: cover !important;
+.tesla-hero-new.visible {
+  opacity: 1;
+  animation: hero-zoom-move 30s linear infinite;
+  background-size: cover;
 }
 
 @keyframes hero-zoom-move {
   0% { background-position: 50% 50%; background-size: 100% 100%; }
   100% { background-position: 35% 50%; background-size: 115% 115%; }
-}
-
-@keyframes hero-zoom-move-right {
-  0% { background-position: 50% 50%; background-size: 100% 100%; }
-  100% { background-position: 65% 50%; background-size: 115% 115%; }
-}
-
-@keyframes hero-glow {
-  0%, 100% { filter: brightness(1.05) contrast(1.1); }
-  50% { filter: brightness(1.15) contrast(1.2); }
-}
-
-@keyframes hero-contrast {
-  0%, 100% { filter: brightness(1.02) contrast(1.05); }
-  50% { filter: brightness(1.05) contrast(1.08); }
-}
-
-@keyframes hero-transition-zoomed {
-  0% { filter: brightness(1) contrast(1.1); background-position: 50% 50%; }
-  100% { filter: brightness(0); background-position: 50% 50%; }
-}
-
-@keyframes hero-zoom-reset {
-  0% { background-position: 52% 50%; }
-  100% { background-size: cover; background-position: 50% 50%; }
 }
 
 .tesla-hero::after {
@@ -852,22 +812,23 @@ body {
 .details-mini-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(255,200,0,0.2);
-  border: 1px solid #ffc800;
-  color: #ffc800;
-  padding: 6px 14px;
+  justify-content: center;
+  background: rgba(255,200,0,0.1);
+  border: 1px solid rgba(255,200,0,0.3);
+  color: rgba(255,200,0,0.6);
+  padding: 4px;
   border-radius: 4px;
-  font-family: 'Russo One', sans-serif;
-  font-size: 0.75rem;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 8px;
 }
 
 .details-mini-btn:hover {
-  background: #ffc800;
-  color: #000;
+  background: rgba(255,200,0,0.2);
+  border-color: rgba(255,200,0,0.6);
+  color: rgba(255,200,0,0.9);
 }
 
 .car-model-info {
@@ -3283,15 +3244,22 @@ body {
 }
 
 /* ===== INTRO ANIMATION ===== */
-.intro-container {
+.intro-wrapper {
   position: fixed;
   inset: 0;
   z-index: 9999;
   background: #000;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  pointerEvents: none;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+
+.intro-wrapper.intro-fade-out {
+  opacity: 0;
+}
+
+.intro-wrapper.intro-hidden {
+  display: none;
 }
 
 .intro-grid {
@@ -3303,27 +3271,11 @@ body {
   background-size: 50px 50px;
 }
 
-.intro-logo-wrapper {
-  position: relative;
+.intro-logo-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 150px;
   height: 150px;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-
-.intro-logo-wrapper.intro-visible {
-  opacity: 1;
-}
-
-.intro-logo-wrapper.intro-fading {
-  opacity: 0;
-}
-
-.intro-container.intro-fading {
-  animation: intro-fade-out 1s ease-out forwards;
-}
-
-@keyframes intro-fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
 }
