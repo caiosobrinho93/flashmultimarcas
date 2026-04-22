@@ -9,66 +9,29 @@ interface IntroProps {
 
 export default function Intro({ onComplete }: IntroProps) {
   const [stage, setStage] = useState(0);
-  const [logoFade, setLogoFade] = useState(false);
-  const [bgFade, setBgFade] = useState(false);
+  const [logoVisible, setLogoVisible] = useState(false);
+  const [allFading, setAllFading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 100);
-    const t2 = setTimeout(() => setStage(2), 2100);
-    const t3 = setTimeout(() => setStage(3), 4100);
-
+    const t1 = setTimeout(() => setLogoVisible(true), 100);
+    const t2 = setTimeout(() => setLogoVisible(false), 2100);
+    const t3 = setTimeout(() => setAllFading(true), 4100);
+    const t4 = setTimeout(() => onComplete(), 5100);
     return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4);
     };
-  }, []);
-
-  useEffect(() => {
-    if (stage === 3) {
-      setLogoFade(true);
-      const t = setTimeout(() => {
-        setBgFade(true);
-        const t2 = setTimeout(() => onComplete(), 1000);
-        return () => clearTimeout(t2);
-      }, 800);
-      return () => clearTimeout(t);
-    }
-  }, [stage, onComplete]);
-
-  const showLogo = stage >= 1;
+  }, [onComplete]);
 
   return (
     <div 
       ref={containerRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        background: '#000',
-        opacity: bgFade ? 0 : 1,
-        transition: 'opacity 1s ease-out',
-        pointerEvents: 'none',
-      }}
+      className={`intro-container ${allFading ? 'intro-fading' : ''}`}
     >
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: `
-          linear-gradient(rgba(255,200,0,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,200,0,0.03) 1px, transparent 1px)
-        `,
-        backgroundSize: '50px 50px',
-      }} />
+      <div className="intro-grid" />
 
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        opacity: logoFade ? 0 : (showLogo ? 1 : 0),
-        transition: 'opacity 1s ease-in-out',
-      }}>
-        <div style={{ width: '150px', height: '150px', position: 'relative' }}>
+      <div className={`intro-logo-wrapper ${allFading ? 'intro-fading' : ''} ${logoVisible ? 'intro-visible' : ''}`}>
+        <div className="intro-logo">
           <Image
             src="/flashmultimarcas/logo.png"
             alt="Flash Multimarcas"

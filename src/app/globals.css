@@ -856,17 +856,24 @@ body {
   background: rgba(255,200,0,0.2);
   border: 1px solid #ffc800;
   color: #ffc800;
-  padding: 4px 12px;
+  padding: 6px 14px;
   border-radius: 4px;
   font-family: 'Russo One', sans-serif;
   font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 8px;
 }
 
 .details-mini-btn:hover {
   background: #ffc800;
   color: #000;
+}
+
+.car-model-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 /* Action Button */
@@ -3273,4 +3280,50 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--gray);
   border-radius: 2px;
+}
+
+/* ===== INTRO ANIMATION ===== */
+.intro-container {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-grid {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,200,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,200,0,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.intro-logo-wrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.intro-logo-wrapper.intro-visible {
+  opacity: 1;
+}
+
+.intro-logo-wrapper.intro-fading {
+  opacity: 0;
+}
+
+.intro-container.intro-fading {
+  animation: intro-fade-out 1s ease-out forwards;
+}
+
+@keyframes intro-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }

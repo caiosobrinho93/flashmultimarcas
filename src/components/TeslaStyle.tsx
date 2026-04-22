@@ -15,27 +15,35 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHeroFading, setIsHeroFading] = useState(false);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isImgFading, setIsImgFading] = useState(false);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
-  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const [carEffect, setCarEffect] = useState(2);
-  const [searchTerm, setSearchTerm] = useState('');
   const zoomOptions = [100, 150, 200, 300, 400];
+  const isTransitioning = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollPosRef = useRef(0);
 
   const goToCar = (index: number) => {
     if (index < 0 || index >= vehicles.length) return;
+    if (isTransitioning.current) return;
+    isTransitioning.current = true;
+    
     scrollPosRef.current = index * 100;
     if (scrollRef.current) {
       const item = scrollRef.current.children[index] as HTMLElement;
       if (item) item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
+    
     setCenterIndex(index);
     setIsHeroFading(true);
-    setTimeout(() => setIsHeroFading(false), 600);
+    setCarEffect(prev => prev === 1 ? 2 : 1);
+    
+    setTimeout(() => {
+      setIsHeroFading(false);
+      isTransitioning.current = false;
+    }, 600);
   };
 
   const formatPrice = (price: number) => {
@@ -177,15 +185,17 @@ useEffect(() => {
             <span>{currentCar.model}</span>
             <div className="car-model-gamer-fire" />
           </div>
-          <div className="car-model-sub">
-            <span className="car-year">{currentCar.year}</span>
-            <span className="car-brand">{currentCar.brand}</span>
+          <div className="car-model-info">
+            <div className="car-model-sub">
+              <span className="car-year">{currentCar.year}</span>
+              <span className="car-brand">{currentCar.brand}</span>
+            </div>
             <button 
               type="button" 
               className="details-mini-btn"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-11z"/>
                 <circle cx="12" cy="12" r="3"/>
               </svg>
@@ -193,17 +203,6 @@ useEffect(() => {
             </button>
           </div>
         </div>
-        <button 
-          type="button" 
-          className="action-button"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
-          title="Ver detalhes"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-11z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-        </button>
       </div>
 
       {/* Thumbnails Bar - Novo Design */}
