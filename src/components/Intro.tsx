@@ -9,29 +9,28 @@ interface IntroProps {
 
 export default function Intro({ onComplete }: IntroProps) {
   const [stage, setStage] = useState(0);
-  const [bgSlideOut, setBgSlideOut] = useState(false);
   const [logoFade, setLogoFade] = useState(false);
+  const [bgFade, setBgFade] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const t1 = setTimeout(() => setStage(1), 100);
-    const t2 = setTimeout(() => setStage(2), 1500);
-    const t3 = setTimeout(() => setStage(3), 2800);
-    const t4 = setTimeout(() => setStage(4), 3800);
+    const t2 = setTimeout(() => setStage(2), 2100);
+    const t3 = setTimeout(() => setStage(3), 4100);
 
     return () => {
-      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4);
+      clearTimeout(t1); clearTimeout(t2); clearTimeout(t3);
     };
   }, []);
 
   useEffect(() => {
-    if (stage === 4) {
+    if (stage === 3) {
       setLogoFade(true);
       const t = setTimeout(() => {
-        setBgSlideOut(true);
-        const t2 = setTimeout(() => onComplete(), 1200);
+        setBgFade(true);
+        const t2 = setTimeout(() => onComplete(), 1000);
         return () => clearTimeout(t2);
-      }, 600);
+      }, 800);
       return () => clearTimeout(t);
     }
   }, [stage, onComplete]);
@@ -46,12 +45,11 @@ export default function Intro({ onComplete }: IntroProps) {
         inset: 0,
         zIndex: 9999,
         background: '#000',
-        transform: bgSlideOut ? 'translateX(-100%)' : 'translateX(0)',
-        transition: 'transform 1s ease-in-out',
+        opacity: bgFade ? 0 : 1,
+        transition: 'opacity 1s ease-out',
         pointerEvents: 'none',
       }}
     >
-      {/* Grid effect */}
       <div style={{
         position: 'absolute',
         inset: 0,
@@ -62,20 +60,15 @@ export default function Intro({ onComplete }: IntroProps) {
         backgroundSize: '50px 50px',
       }} />
 
-      {/* Logo com fadeout */}
       <div style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
         opacity: logoFade ? 0 : (showLogo ? 1 : 0),
-        transition: 'opacity 0.6s ease-out',
+        transition: 'opacity 1s ease-in-out',
       }}>
-        <div style={{
-          position: 'relative',
-          width: '150px',
-          height: '150px',
-        }}>
+        <div style={{ width: '150px', height: '150px', position: 'relative' }}>
           <Image
             src="/flashmultimarcas/logo.png"
             alt="Flash Multimarcas"
