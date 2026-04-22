@@ -887,10 +887,10 @@ body {
   transform: scale(0.95);
 }.thumb-item-new.active,
 .thumb-item-new[class="thumb-item-new active"] {
-  opacity: 1 !important;  border-color: #ffc800 !important;
+  opacity: 1 !important;
+  border-color: #ffc800 !important;
   box-shadow: 0 0 20px rgba(255, 200, 0, 0.8), inset 0 0 10px rgba(255, 200, 0, 0.3) !important;
   transform: scale(1.05) !important;
-}
 }
 
 .thumb-img-new {
