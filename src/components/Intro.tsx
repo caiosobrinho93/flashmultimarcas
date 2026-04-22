@@ -9,7 +9,7 @@ interface IntroProps {
 
 export default function Intro({ onComplete }: IntroProps) {
   const [stage, setStage] = useState(0);
-  const [fadeOpacity, setFadeOpacity] = useState(1);
+  const [slideOut, setSlideOut] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,8 +26,8 @@ export default function Intro({ onComplete }: IntroProps) {
   useEffect(() => {
     if (stage === 4) {
       const t = setTimeout(() => {
-        setFadeOpacity(0);
-        const t2 = setTimeout(() => onComplete(), 1000);
+        setSlideOut(true);
+        const t2 = setTimeout(() => onComplete(), 1200);
         return () => clearTimeout(t2);
       }, 300);
       return () => clearTimeout(t);
@@ -44,8 +44,8 @@ export default function Intro({ onComplete }: IntroProps) {
         inset: 0,
         zIndex: 9999,
         background: '#000',
-        opacity: fadeOpacity,
-        transition: 'opacity 1s ease-out',
+        transform: slideOut ? 'translateX(-100%)' : 'translateX(0)',
+        transition: 'transform 1s ease-in-out',
         pointerEvents: 'none',
       }}
     >
