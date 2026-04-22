@@ -10,7 +10,7 @@ interface TeslaStyleProps {
 }
 
 export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
-const [currentIndex, setCurrentIndex] = useState(0);
+  const [centerIndex, setCenterIndex] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -25,7 +25,7 @@ const [currentIndex, setCurrentIndex] = useState(0);
   const zoomOptions = [100, 150, 200, 300, 400];
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const currentCar = vehicles[currentIndex];
+  const currentCar = vehicles[centerIndex];
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -35,42 +35,13 @@ const [currentIndex, setCurrentIndex] = useState(0);
     }).format(price);
   };
 
-  const goToCar = (index: number) => {
-    if (index === currentIndex) return;
+const goToCar = (index: number) => {
+    if (index === centerIndex) return;
+    setCenterIndex(index);
     setIsHeroFading(true);
     setTimeout(() => {
-      setCurrentIndex(index);
       setIsHeroFading(false);
-      setCarEffect(prev => prev === 2 ? 3 : 2);
     }, 600);
-  };
-
-const goNext = () => {
-    if (vehicles.length <=1 || isTransitioning) return;
-    setIsTransitioning(true);
-    setIsHeroFading(true);
-    setTimeout(() => {
-      setCurrentIndex(prev => (prev + 1) % vehicles.length);
-      setCarEffect(prev => prev === 2 ? 3 : 2);
-    }, 600);
-    setTimeout(() => {
-      setIsHeroFading(false);
-      setIsTransitioning(false);
-    }, 1000);
-  };
-
-  const goPrev = () => {
-    if (vehicles.length <= 1 || isTransitioning) return;
-    setIsTransitioning(true);
-    setIsHeroFading(true);
-    setTimeout(() => {
-      setCurrentIndex(prev => prev === 0 ? vehicles.length - 1 : prev - 1);
-      setCarEffect(prev => prev === 2 ? 3 : 2);
-    }, 600);
-    setTimeout(() => {
-      setIsHeroFading(false);
-      setIsTransitioning(false);
-    }, 1000);
   };
 
   const handleWhatsapp = () => {
@@ -82,7 +53,6 @@ const goNext = () => {
 
   const changeImage = (direction: number) => {
     if (!currentCar.images || currentCar.images.length <= 1) return;
-    
     setCurrentImageIndex(prev => {
       if (direction === 1) {
         return (prev + 1) % currentCar.images!.length;
@@ -93,7 +63,7 @@ const goNext = () => {
   };
 
   const scrollToCar = (index: number) => {
-    goToCar(index);
+    setCenterIndex(index);
     setTimeout(() => {
       if (scrollRef.current && scrollRef.current.children[index]) {
         const item = scrollRef.current.children[index] as HTMLElement;
@@ -105,17 +75,33 @@ const goNext = () => {
   useEffect(() => {
     if (detailsModalOpen) return;
     const autoPlay = setInterval(() => {
-      goNext();
+      setCenterIndex(prev => (prev + 1) % vehicles.length);
     }, 8000);
     return () => clearInterval(autoPlay);
-  }, [detailsModalOpen, goNext]);
+  }, [detailsModalOpen]);
 
   useEffect(() => {
-    if (scrollRef.current && scrollRef.current.children[currentIndex]) {
-      const item = scrollRef.current.children[currentIndex] as HTMLElement;
-      item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    if (scrollRef.current) {
+      const track = scrollRef.current;
+      const handleScroll = () => {
+        const trackRect = track.getBoundingClientRect();
+        const center = trackRect.left + trackRect.width / 2;
+        
+        Array.from(track.children).forEach((child, idx) => {
+          const item = child as HTMLElement;
+          const itemRect = item.getBoundingClientRect();
+          const itemCenter = itemRect.left + itemRect.width / 2;
+          if (Math.abs(itemCenter - center) < itemRect.width / 2) {
+            setCenterIndex(idx);
+          }
+        });
+      };
+      
+      track.addEventListener('scroll', handleScroll);
+      handleScroll();
+      return () => track.removeEventListener('scroll', handleScroll);
     }
-  }, [currentIndex]);
+  }, []);
 
   return (
     <div className="tesla-wrapper">
@@ -167,7 +153,7 @@ const goNext = () => {
             </div>
             <div className="menu-grid">
               {vehicles.map((car, idx) => (
-                <button key={car.id} className={`menu-item ${idx === currentIndex ? 'active' : ''}`} onClick={() => { goToCar(idx); setMenuOpen(false); }}>
+                <button key={car.id} className={`menu-item ${idx === centerIndex ? 'active' : ''}`} onClick={() => { goToCar(idx); setMenuOpen(false); }}>
                   <div className="menu-item-img">
                     <Image src={`/flashmultimarcas${car.imageUrl}`} alt={car.model} fill className="object-cover" sizes="80px" />
                   </div>
@@ -210,7 +196,7 @@ const goNext = () => {
 
       {/* Thumbnails Bar - Novo Design */}
       <div className="thumbnails-bar">
-        <button className="thumb-nav-corner left-corner" onClick={() => scrollToCar(Math.max(0, currentIndex - 1))}>
+        <button className="thumb-nav-corner left-corner" onClick={() => scrollToCar(Math.max(0, centerIndex - 1))}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 19l-7-7 7-7" /></svg>
         </button>
         
@@ -218,7 +204,7 @@ const goNext = () => {
           {vehicles.map((car, idx) => (
             <button 
               key={car.id} 
-              className={`thumb-item-new ${idx === currentIndex ? 'active' : ''}`} 
+              className={`thumb-item-new ${idx === centerIndex ? 'active' : ''}`} 
               onClick={() => goToCar(idx)}
             >
               <div className="thumb-img-new">
@@ -228,7 +214,7 @@ const goNext = () => {
           ))}
         </div>
         
-        <button className="thumb-nav-corner right-corner" onClick={() => scrollToCar(Math.min(vehicles.length - 1, currentIndex + 1))}>
+        <button className="thumb-nav-corner right-corner" onClick={() => scrollToCar(Math.min(vehicles.length - 1, centerIndex + 1))}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 5l7 7-7 7" /></svg>
         </button>
       </div>
@@ -241,7 +227,7 @@ const goNext = () => {
 
         <div className="hero-dots">
           {vehicles.map((_, idx) => (
-            <button key={idx} className={`dot ${idx === currentIndex ? 'active' : ''}`} onClick={() => goToCar(idx)} />
+            <button key={idx} className={`dot ${idx === centerIndex ? 'active' : ''}`} onClick={() => goToCar(idx)} />
           ))}
         </div>
       </main>
