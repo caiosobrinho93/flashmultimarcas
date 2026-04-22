@@ -303,34 +303,18 @@ body {
   overflow: hidden;
 }
 
-.tesla-hero {
+.tesla-hero-bg {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: 50% 50%;
   background-repeat: no-repeat;
-  pointer-events: none;
   transition: opacity 0.5s ease-in-out;
-}
-
-.tesla-hero-old {
-  z-index: 1;
-  opacity: 1;
-}
-
-.tesla-hero-old.fading-out {
-  opacity: 0;
-}
-
-.tesla-hero-new {
-  z-index: 2;
-  opacity: 0;
-}
-
-.tesla-hero-new.visible {
-  opacity: 1;
   animation: hero-zoom-move 30s linear infinite;
-  background-size: cover;
+}
+
+.tesla-hero-bg.fading-out {
+  opacity: 0;
 }
 
 @keyframes hero-zoom-move {
@@ -338,7 +322,7 @@ body {
   100% { background-position: 35% 50%; background-size: 115% 115%; }
 }
 
-.tesla-hero::after {
+.tesla-hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -346,7 +330,7 @@ body {
   pointer-events: none;
 }
 
-.tesla-hero::before {
+.tesla-hero-bg::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -812,23 +796,23 @@ body {
 .details-mini-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: rgba(255,200,0,0.1);
-  border: 1px solid rgba(255,200,0,0.3);
-  color: rgba(255,200,0,0.6);
-  padding: 4px;
+  gap: 6px;
+  background: rgba(255,200,0,0.2);
+  border: 1px solid #ffc800;
+  color: #ffc800;
+  padding: 6px 14px;
   border-radius: 4px;
-  width: 24px;
-  height: 24px;
+  font-family: 'Russo One', sans-serif;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%);
   margin-top: 8px;
 }
 
 .details-mini-btn:hover {
-  background: rgba(255,200,0,0.2);
-  border-color: rgba(255,200,0,0.6);
-  color: rgba(255,200,0,0.9);
+  background: #ffc800;
+  color: #000;
 }
 
 .car-model-info {

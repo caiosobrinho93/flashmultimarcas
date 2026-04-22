@@ -24,26 +24,31 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
   const isTransitioning = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollPosRef = useRef(0);
+  const displayedCarIndex = useRef(0);
+  const [displayedCar, setDisplayedCar] = useState(vehicles[0]);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   const goToCar = (index: number) => {
     if (index < 0 || index >= vehicles.length) return;
     if (isTransitioning.current) return;
+    if (index === displayedCarIndex.current) return;
     isTransitioning.current = true;
     
-    scrollPosRef.current = index * 100;
     if (scrollRef.current) {
       const item = scrollRef.current.children[index] as HTMLElement;
       if (item) item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
     
+    setIsFadingOut(true);
     setCenterIndex(index);
-    setIsHeroFading(true);
-    setCarEffect(prev => prev === 1 ? 2 : 1);
     
     setTimeout(() => {
-      setIsHeroFading(false);
+      setIsFadingOut(false);
+      setDisplayedCar(vehicles[index]);
+      displayedCarIndex.current = index;
+      scrollPosRef.current = index * 100;
       isTransitioning.current = false;
-    }, 600);
+    }, 500);
   };
 
   const formatPrice = (price: number) => {
@@ -82,22 +87,14 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
+    if (detailsModalOpen) return;
     const interval = setInterval(() => {
       const nextIndex = (centerIndex + 1) % vehicles.length;
-      
-      scrollPosRef.current = nextIndex * 100;
-      if (scrollRef.current) {
-        const item = scrollRef.current.children[nextIndex] as HTMLElement;
-        if (item) item.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-      
-      setCenterIndex(nextIndex);
-      setIsHeroFading(true);
-      setTimeout(() => setIsHeroFading(false), 400);
+      goToCar(nextIndex);
     }, 4000);
     
     return () => clearInterval(interval);
-  }, [centerIndex, vehicles.length]);
+  }, [centerIndex, vehicles.length, detailsModalOpen]);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -195,10 +192,11 @@ useEffect(() => {
               className="details-mini-btn"
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="12" height="12">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-11z"/>
                 <circle cx="12" cy="12" r="3"/>
               </svg>
+              Ver detalhes
             </button>
           </div>
         </div>
@@ -224,12 +222,8 @@ useEffect(() => {
       {/* Hero Main */}
       <div className="tesla-hero-container">
         <div 
-          className={`tesla-hero tesla-hero-old ${isHeroFading ? 'fading-out' : ''}`}
-          style={{ backgroundImage: `url(/flashmultimarcas${currentCar.imageUrl})` }}
-        />
-        <div 
-          className={`tesla-hero tesla-hero-new ${isHeroFading ? '' : 'visible'}`}
-          style={{ backgroundImage: `url(/flashmultimarcas${currentCar.imageUrl})` }}
+          className={`tesla-hero tesla-hero-bg ${isFadingOut ? 'fading-out' : ''}`}
+          style={{ backgroundImage: `url(/flashmultimarcas${displayedCar.imageUrl})` }}
         />
         <div className="hero-dots">
           {vehicles.map((_, idx) => (
