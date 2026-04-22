@@ -9,7 +9,7 @@ interface IntroProps {
 
 export default function Intro({ onComplete }: IntroProps) {
   const [stage, setStage] = useState(0);
-  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [fadeOpacity, setFadeOpacity] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,28 +21,18 @@ export default function Intro({ onComplete }: IntroProps) {
     return () => {
       clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4);
     };
-  }, [onComplete]);
+  }, []);
 
   useEffect(() => {
     if (stage === 4) {
-      setIsFadingOut(true);
-      const t = setTimeout(() => onComplete(), 800);
+      const t = setTimeout(() => {
+        setFadeOpacity(0);
+        const t2 = setTimeout(() => onComplete(), 1000);
+        return () => clearTimeout(t2);
+      }, 300);
       return () => clearTimeout(t);
     }
   }, [stage, onComplete]);
-
-  if (isFadingOut) {
-    return (
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        background: '#000',
-        opacity: 1,
-        transition: 'opacity 0.8s ease-out',
-      }} />
-    );
-  }
 
   const showLogo = stage >= 1;
 
@@ -54,8 +44,9 @@ export default function Intro({ onComplete }: IntroProps) {
         inset: 0,
         zIndex: 9999,
         background: '#000',
-        transition: isFadingOut ? 'opacity 0.8s ease-out' : (stage >= 3 ? 'opacity 1s ease-out' : 'none'),
-        opacity: isFadingOut ? 1 : (stage >= 3 ? 0 : 1),
+        opacity: fadeOpacity,
+        transition: 'opacity 1s ease-out',
+        pointerEvents: 'none',
       }}
     >
       {/* Grid effect */}
