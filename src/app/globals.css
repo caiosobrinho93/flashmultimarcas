@@ -2148,44 +2148,47 @@ html, body {
   z-index: 10;
 }
 
-.gallery-close {
+.gallery-top-bar {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 110;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+
+.gallery-close {
   width: 40px;
   height: 40px;
-  background: rgba(0,0,0,0.9);
-  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.7);
+  border: 2px solid rgba(255,255,255,0.4);
   border-radius: 50%;
   color: #fff;
   cursor: pointer;
-  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  font-weight: bold;
   transition: all 0.3s ease;
 }
 
 .gallery-close:hover {
   background: rgba(255,255,255,0.2);
   border-color: #fff;
-  color: #fff;
 }
 
 .gallery-img-counter {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  padding: 6px 12px;
+  padding: 6px 14px;
   background: rgba(0,0,0,0.7);
-  border: 1px solid #ffc800;
-  border-radius: 4px;
+  border: 1px solid rgba(255,200,0,0.6);
+  border-radius: 20px;
   font-family: 'Orbitron', sans-serif;
   font-size: 0.8rem;
   color: #ffc800;
-  z-index: 100;
   letter-spacing: 1px;
 }
 

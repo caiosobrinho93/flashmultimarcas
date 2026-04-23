@@ -230,19 +230,21 @@ useEffect(() => {
       </div>
 
       {/* Details Modal - Novo Layout */}
-      <div className={`gallery-modal ${detailsModalOpen ? 'open' : ''}`} style={{ zIndex: 50 }}>
+      <div className={`gallery-modal ${detailsModalOpen ? 'open' : ''}`}>
         <div className="gallery-backdrop" />
         
-        <button className="gallery-close" onClick={() => setDetailsModalOpen(false)}>
-          ✕
-        </button>
-        
-        {/* Contador no topo */}
-        {currentCar.images && currentCar.images.length > 1 && (
-          <div className="gallery-img-counter">
-            {currentImageIndex + 1}/{currentCar.images.length}
-          </div>
-        )}
+        {/* Barra superior fixa */}
+        <div className="gallery-top-bar">
+          <button className="gallery-close" onClick={() => setDetailsModalOpen(false)}>
+            ✕
+          </button>
+          {/* Contador no topo */}
+          {currentCar.images && currentCar.images.length > 1 && (
+            <div className="gallery-img-counter">
+              {currentImageIndex + 1}/{currentCar.images.length}
+            </div>
+          )}
+        </div>
         
         {/* Setas laterais para navegar */}
         {currentCar.images && currentCar.images.length > 1 && (
