@@ -3369,42 +3369,63 @@ html, body {
   border-radius: 2px;
 }
 
-/* ===== INTRO ANIMATION ===== */
+/* ===== INTRO CINEMATIC ===== */
 .intro-wrapper {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 999999;
   background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   opacity: 1;
-  transition: opacity 1s ease-out;
-  pointer-events: none;
+  transition: opacity 1.2s ease;
 }
 
-.intro-wrapper.intro-fade-out {
+.intro-wrapper.bg-fade {
   opacity: 0;
-  pointer-events: none;
 }
 
-.intro-logo-anim {
-  width: 180px;
-  height: 180px;
+.intro-logo {
   position: relative;
-  opacity: 0;
-  transform: scale(0.5) rotate(0deg);
-  transition: opacity 1s ease-out, transform 1s ease-out;
+  width: 220px;
+  height: 220px;
+  will-change: transform, opacity;
 }
 
-.intro-wrapper:not(.intro-fade-out) .intro-logo-anim {
-  opacity: 1;
-  transform: scale(1) rotate(3600deg);
+.logo-enter {
+  animation: logoIntro 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.intro-wrapper.intro-fade-out .intro-logo-anim {
-  opacity: 0;
-  transform: scale(0.5) rotate(7200deg);
+.logo-exit {
+  animation: logoOutro 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes logoIntro {
+  0% {
+    opacity: 0;
+    transform: scale(0.65);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes logoOutro {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.75);
+    filter: blur(8px);
+  }
 }
 
 .intro-container {

@@ -8,27 +8,32 @@ interface IntroProps {
 }
 
 export default function Intro({ onComplete }: IntroProps) {
-  const [visible, setVisible] = useState(true);
+  const [phase, setPhase] = useState<'enter' | 'exit-bg'>('enter');
 
   useEffect(() => {
-    const t1 = setTimeout(() => setVisible(false), 3000);
-    const t2 = setTimeout(() => onComplete(), 4000);
-    
+    const logoExit = setTimeout(() => {
+      setPhase('exit-bg');
+    }, 3000);
+
+    const complete = setTimeout(() => {
+      onComplete();
+    }, 5000);
+
     return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
+      clearTimeout(logoExit);
+      clearTimeout(complete);
     };
   }, [onComplete]);
 
   return (
-    <div className={`intro-wrapper ${!visible ? 'intro-fade-out' : ''}`}>
-      <div className="intro-logo-anim">
+    <div className={`intro-wrapper ${phase === 'exit-bg' ? 'bg-fade' : ''}`}>
+      <div className={`intro-logo ${phase === 'exit-bg' ? 'logo-exit' : 'logo-enter'}`}>
         <Image
           src="/flashmultimarcas/logo.png"
           alt="Flash Multimarcas"
           fill
-          style={{ objectFit: 'contain' }}
           priority
+          style={{ objectFit: 'contain' }}
         />
       </div>
     </div>
