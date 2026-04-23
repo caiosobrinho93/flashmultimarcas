@@ -3415,12 +3415,13 @@ html, body {
   transition: opacity 1s ease-out;
 }
 
-.intro-container.fade-out {
+.intro-container.bg-fade-out {
   opacity: 0;
 }
 
 .intro-container.hidden {
   display: none;
+  pointer-events: none;
 }
 
 .intro-logo-wrapper {
@@ -3428,11 +3429,63 @@ html, body {
   height: 180px;
   position: relative;
   opacity: 0;
-  transition: opacity 1.5s ease-out;
+  transform: scale(0.8);
 }
 
-.intro-logo-wrapper.visible {
-  opacity: 1;
+.intro-logo-wrapper.logo-fade-in {
+  animation: logoFadeIn 1.8s ease-out forwards;
+}
+
+@keyframes logoFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intro-logo-wrapper.logo-spin-start {
+  animation: logoSpinStart 1.5s ease-in-out forwards;
+}
+
+@keyframes logoSpinStart {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(720deg) scale(1.05);
+  }
+}
+
+.intro-logo-wrapper.logo-spin-fast {
+  animation: logoSpinFast 0.8s linear infinite;
+}
+
+@keyframes logoSpinFast {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.intro-logo-wrapper.logo-fade-out {
+  animation: logoFadeOut 1s ease-out forwards;
+}
+
+@keyframes logoFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 
 .intro-logo-wrapper img {

@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { storeInfo } from '@/lib/data';
 
 interface IntroProps {
   onComplete: () => void;
@@ -10,45 +9,33 @@ interface IntroProps {
 
 export default function Intro({ onComplete }: IntroProps) {
   const [stage, setStage] = useState(0);
-  const [containerVisible, setContainerVisible] = useState(true);
-  const [isFadingOut, setIsFadingOut] = useState(false);
+  const [bgFading, setBgFading] = useState(false);
+  const [containerHidden, setContainerHidden] = useState(false);
 
   useEffect(() => {
     const t1 = setTimeout(() => setStage(1), 100);
-    const t2 = setTimeout(() => setStage(2), 1600);
+    const t2 = setTimeout(() => setStage(2), 2000);
+    const t3 = setTimeout(() => setStage(3), 4000);
+    const t4 = setTimeout(() => setStage(4), 4800);
+    const t5 = setTimeout(() => setBgFading(true), 5800);
+    const t6 = setTimeout(() => {
+      setContainerHidden(true);
+      onComplete();
+    }, 6800);
     
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+      clearTimeout(t5);
+      clearTimeout(t6);
     };
-  }, []);
-
-  const handleWhatsapp = () => {
-    setIsFadingOut(true);
-    setTimeout(() => {
-      window.open(`https://wa.me/55${storeInfo.whatsapp}`, '_blank');
-      setContainerVisible(false);
-      setTimeout(() => onComplete(), 1000);
-    }, 1000);
-  };
-
-  const handleAccessSite = () => {
-    setStage(3);
-    setTimeout(() => {
-      setIsFadingOut(true);
-      setTimeout(() => {
-        setContainerVisible(false);
-        setTimeout(() => onComplete(), 1000);
-      }, 1000);
-    }, 1000);
-  };
-
-  const showLogo = stage >= 1;
-  const showButtons = stage >= 2;
+  }, [onComplete]);
 
   return (
-    <div className={`intro-container ${isFadingOut ? 'fade-out' : ''} ${!containerVisible ? 'hidden' : ''}`}>
-      <div className={`intro-logo-wrapper ${showLogo ? 'visible' : ''}`}>
+    <div className={`intro-container ${bgFading ? 'bg-fade-out' : ''} ${containerHidden ? 'hidden' : ''}`}>
+      <div className={`intro-logo-wrapper ${stage >= 1 ? 'logo-fade-in' : ''} ${stage === 2 ? 'logo-spin-start' : ''} ${stage >= 3 ? 'logo-spin-fast' : ''} ${stage === 4 ? 'logo-fade-out' : ''}`}>
         <Image
           src="/flashmultimarcas/logo.png"
           alt="Flash Multimarcas"
@@ -56,15 +43,6 @@ export default function Intro({ onComplete }: IntroProps) {
           style={{ objectFit: 'contain' }}
           priority
         />
-      </div>
-      
-      <div className={`intro-buttons ${showButtons ? 'visible' : ''}`}>
-        <button className="intro-btn intro-btn-site" onClick={handleAccessSite}>
-          Acessar Site
-        </button>
-        <button className="intro-btn intro-btn-whats" onClick={handleWhatsapp}>
-          WhatsApp
-        </button>
       </div>
     </div>
   );

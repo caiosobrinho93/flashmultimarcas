@@ -178,8 +178,7 @@ useEffect(() => {
       {/* Nome do Carro - Fora do Menu */}
       <div className="car-name-group">
         <div className="car-model-sub">
-          <button 
-            type="button" 
+          <div 
             className="details-lupa-btn"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
             title="Ver detalhes"
@@ -188,7 +187,7 @@ useEffect(() => {
               <circle cx="11" cy="11" r="8"/>
               <path d="M21 21l-4.35-4.35"/>
             </svg>
-          </button>
+          </div>
           <span className="car-year">{currentCar.year}</span>
           <span className="car-brand">{currentCar.brand}</span>
         </div>
