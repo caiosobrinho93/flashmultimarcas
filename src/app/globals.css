@@ -3375,32 +3375,31 @@ html, body {
   inset: 0;
   z-index: 9999;
   background: #000;
-  pointerEvents: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 1;
   transition: opacity 1s ease-out;
+  pointer-events: none;
 }
 
 .intro-wrapper.intro-fade-out {
   opacity: 0;
+  pointer-events: none;
 }
 
-.intro-wrapper.intro-hidden {
-  display: none;
-}
-
-.intro-grid {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(rgba(255,200,0,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,200,0,0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-  transition: opacity 1s ease-out;
-  opacity: 1;
-}
-
-.intro-wrapper.intro-fade-out .intro-grid {
+.intro-logo-anim {
+  width: 180px;
+  height: 180px;
+  position: relative;
   opacity: 0;
+  transform: scale(0.5) rotate(0deg);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.intro-wrapper:not(.intro-fade-out) .intro-logo-anim {
+  opacity: 1;
+  transform: scale(1) rotate(3600deg);
 }
 
 .intro-container {
