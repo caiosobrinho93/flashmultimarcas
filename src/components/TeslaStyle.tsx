@@ -27,6 +27,7 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
   const displayedCarIndex = useRef(0);
   const [displayedCar, setDisplayedCar] = useState(vehicles[0]);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
 
   const goToCar = (index: number) => {
     if (index < 0 || index >= vehicles.length) return;
@@ -46,6 +47,7 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
       displayedCarIndex.current = index;
       setCenterIndex(index);
       scrollPosRef.current = index * 100;
+      setAnimKey(prev => prev + 1);
       
       setTimeout(() => {
         setIsFadingOut(false);
@@ -216,6 +218,7 @@ useEffect(() => {
       {/* Hero Main */}
       <div className="tesla-hero-container">
         <div 
+          key={animKey}
           className={`tesla-hero tesla-hero-bg ${isFadingOut ? 'fading-out' : ''}`}
           style={{ backgroundImage: `url(/flashmultimarcas${displayedCar.imageUrl})` }}
         />
