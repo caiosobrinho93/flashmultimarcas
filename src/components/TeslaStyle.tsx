@@ -16,6 +16,7 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHeroFading, setIsHeroFading] = useState(false);
   const [isImgFading, setIsImgFading] = useState(false);
+  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [carEffect, setCarEffect] = useState(2);
@@ -288,7 +289,7 @@ useEffect(() => {
         />
         
         {/* Card flutuante com scroll interno */}
-        <div className="gallery-float-card">
+        <div className={`gallery-float-card ${detailsExpanded ? 'expanded' : ''}`}>
           {/* Linha 1: Nome + WhatsApp */}
           <div className="gallery-float-header">
             <div className="gallery-float-title-area">
@@ -303,10 +304,20 @@ useEffect(() => {
             </button>
           </div>
           
+          {/* Botão para expandir/recolher informações */}
+          <button 
+            className="details-toggle-btn"
+            onClick={() => setDetailsExpanded(!detailsExpanded)}
+          >
+            {detailsExpanded ? '▲ Recolher informações' : '▼ Ver informações do veículo'}
+          </button>
+          
           {/* Área com scroll */}
           <div className="gallery-float-scroll">
-            {/* Grade de especificações - Layout Profissional */}
-            <div className="specs-professional">
+            {detailsExpanded && (
+              <>
+                {/* Grade de especificações - Layout Profissional */}
+                <div className="specs-professional">
               <div className="spec-row">
                 <div className="spec-key">Quilometragem</div>
                 <div className="spec-value">{currentCar.mileage}</div>
@@ -361,6 +372,8 @@ useEffect(() => {
                 ))}
               </ul>
             </div>
+              </>
+            )}
           </div>
         </div>
       </div>

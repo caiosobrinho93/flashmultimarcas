@@ -41,10 +41,17 @@ body {
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 body {
   overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+html, body {
+  overflow: hidden !important;
+  max-height: 100vh;
 }
 
 /* ===== HEADER ===== */
@@ -741,9 +748,20 @@ body {
 }
 
 .car-name-group {
+  position: fixed;
+  top: 90px;
+  left: 20px;
+  z-index: 15;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+}
+
+@media (min-width: 769px) {
+  .car-name-group {
+    top: 130px;
+    left: 30px;
+  }
 }
 
 /* Car Info Bar - TOPO ESQUERDO */
@@ -2418,22 +2436,23 @@ body {
 
 .details-toggle-btn {
   width: 100%;
-  padding: 8px;
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.4);
-  font-family: 'Exo 2', sans-serif;
-  font-size: 0.7rem;
+  padding: 12px;
+  background: rgba(255,200,0,0.1);
+  border: 1px solid rgba(255,200,0,0.3);
+  border-radius: 8px;
+  color: #ffc800;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 8px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  text-align: left;
 }
 
 .details-toggle-btn:hover {
-  color: rgba(255,255,255,0.7);
+  background: rgba(255,200,0,0.2);
+  border-color: #ffc800;
 }
 
 .gallery-float-scroll::-webkit-scrollbar {
@@ -2833,7 +2852,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0;
+  padding: 10px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -2842,16 +2861,16 @@ body {
 }
 
 .spec-key {
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.6);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  font-weight: 400;
+  letter-spacing: 0.3px;
 }
 
 .spec-value {
-  font-size: 0.9rem;
-  color: #ffc800;
-  font-weight: 600;
+  font-size: 0.95rem;
+  color: #fff;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
