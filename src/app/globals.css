@@ -317,12 +317,12 @@ html, body {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   transition: opacity 0.5s ease-in-out;
-  animation: cinematicPan 8s ease-in-out infinite alternate;
+  animation: cinematicPanMobile 8s ease-in-out infinite alternate;
   will-change: transform, background-position;
   filter: contrast(1.08) saturate(1.15) brightness(1.05);
 }
 
-@keyframes cinematicPan {
+@keyframes cinematicPanMobile {
   0% {
     background-position: 50% 50%;
     background-size: 125%;
@@ -334,6 +334,27 @@ html, body {
   100% {
     background-position: 55% 50%;
     background-size: 125%;
+  }
+}
+
+@media (min-width: 769px) {
+  .tesla-hero-bg {
+    animation: cinematicPanDesktop 10s ease-in-out infinite alternate;
+  }
+  
+  @keyframes cinematicPanDesktop {
+    0% {
+      background-position: 48% 50%;
+      background-size: 110%;
+    }
+    50% {
+      background-position: 52% 50%;
+      background-size: 115%;
+    }
+    100% {
+      background-position: 48% 50%;
+      background-size: 110%;
+    }
   }
 }
 
@@ -891,8 +912,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 45px;
+  width: 38px;
+  height: 38px;
   border-radius: 8px;
   background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 50%, #3a3a3a 100%);
   border: 1px solid rgba(255,255,255,0.15);
