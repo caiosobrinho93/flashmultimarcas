@@ -1,0 +1,153 @@
+========================================
+INTRO ANIMATION - COMPLETE FILE
+========================================
+
+========================================
+1. INTRO COMPONENT (Intro.tsx)
+========================================
+
+'use client';
+
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
+interface IntroProps {
+  onComplete: () => void;
+}
+
+export default function Intro({ onComplete }: IntroProps) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setVisible(false), 3000);
+    const t2 = setTimeout(() => onComplete(), 4000);
+    
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [onComplete]);
+
+  return (
+    <div className={`intro-wrapper ${!visible ? 'intro-fade-out' : ''}`}>
+      <div className="intro-logo-anim">
+        <Image
+          src="/flashmultimarcas/logo.png"
+          alt="Flash Multimarcas"
+          fill
+          style={{ objectFit: 'contain' }}
+          priority
+        />
+      </div>
+    </div>
+  );
+}
+
+========================================
+2. CSS STYLES (globals.css)
+========================================
+
+/* ===== INTRO ANIMATION ===== */
+.intro-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+  pointer-events: none;
+}
+
+.intro-wrapper.intro-fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-logo-anim {
+  width: 180px;
+  height: 180px;
+  position: relative;
+  opacity: 0;
+  transform: scale(0.5) rotate(0deg);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.intro-wrapper:not(.intro-fade-out) .intro-logo-anim {
+  opacity: 1;
+  transform: scale(1) rotate(3600deg);
+}
+
+========================================
+3. TIMELINE EXPLANATION
+========================================
+
+TIMELINE:
+- 0ms:     Component renders. visible=true. Classes: "intro-wrapper"
+           - intro-wrapper is visible (opacity 1)
+           - intro-logo-anim starts at opacity:0, scale:0.5, rotate:0deg
+           - Transition starts immediately
+
+- 100ms:   CSS transition begins
+           - intro-logo-anim transitions to: opacity:1, scale:1, rotate:3600deg
+           - Duration: 1s ease-out
+
+- 1000ms:  Logo animation completes (scale 0.5->1, rotate 0->3600°)
+
+- 3000ms:  setVisible(false) is called
+           - Class becomes: "intro-wrapper intro-fade-out"
+           - intro-wrapper.intro-fade-out: opacity becomes 0
+           - Transition: 1s ease-out
+           - Logo already at final state, stays hidden with wrapper
+
+- 4000ms:  onComplete() is called
+           - Intro unmounts/hides
+
+========================================
+4. PROBLEM DIAGNOSIS
+========================================
+
+The issue is that when `!visible` is true (at 3s), the class becomes:
+"intro-wrapper intro-fade-out"
+
+But the CSS selector `.intro-wrapper:not(.intro-fade-out) .intro-logo-anim` 
+will NEVER match because the element HAS the class `intro-fade-out`.
+
+So the logo animation state (opacity:1, scale:1, rotate:3600deg) is already 
+set from the initial transition, and when the wrapper fades out, the logo 
+goes along with it.
+
+The expected behavior:
+1. Logo fades in and rotates (0-1s)
+2. Logo stays visible (1-3s)
+3. Logo fades out (3-4s)
+4. Background fades out (3-4s)
+
+The actual behavior:
+1. Logo fades in and rotates (0-1s)
+2. Logo stays visible (1-3s)
+3. Logo + Background fade out together (3-4s)
+
+This should work correctly actually. The problem might be timing or the
+transition not being smooth.
+
+========================================
+5. SUGGESTED FIX
+========================================
+
+The transition needs to trigger properly. Currently:
+
+1. When visible=true, the selector `.intro-wrapper:not(.intro-fade-out)` 
+   matches and applies the final state (scale:1, rotate:3600deg) with transition.
+
+2. When visible=false, the class becomes "intro-wrapper intro-fade-out".
+   The selector no longer matches, so the logo returns to its initial state
+   (opacity:0, scale:0.5, rotate:0deg) BUT this happens instantly because
+   the transition only applies when the selector matches.
+
+Solution: Make the logo animate on BOTH enter AND exit by using a different
+approach with animation properties or by adding transitions to the fade-out state.
+
+========================================

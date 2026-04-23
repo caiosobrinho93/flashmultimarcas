@@ -3402,6 +3402,11 @@ html, body {
   transform: scale(1) rotate(3600deg);
 }
 
+.intro-wrapper.intro-fade-out .intro-logo-anim {
+  opacity: 0;
+  transform: scale(0.5) rotate(7200deg);
+}
+
 .intro-container {
   position: fixed;
   inset: 0;
