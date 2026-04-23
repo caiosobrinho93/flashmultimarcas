@@ -8,20 +8,21 @@ interface IntroProps {
 }
 
 export default function Intro({ onComplete }: IntroProps) {
-  const [stage, setStage] = useState(0);
-  const [bgFading, setBgFading] = useState(false);
-  const [containerHidden, setContainerHidden] = useState(false);
+  const [logoOpacity, setLogoOpacity] = useState(0);
+  const [logoScale, setLogoScale] = useState(0.8);
+  const [logoRotation, setLogoRotation] = useState(0);
+  const [containerOpacity, setContainerOpacity] = useState(1);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStage(1), 100);
-    const t2 = setTimeout(() => setStage(2), 2000);
-    const t3 = setTimeout(() => setStage(3), 4000);
-    const t4 = setTimeout(() => setStage(4), 4800);
-    const t5 = setTimeout(() => setBgFading(true), 5800);
-    const t6 = setTimeout(() => {
-      setContainerHidden(true);
-      onComplete();
-    }, 6800);
+    const t1 = setTimeout(() => setLogoOpacity(1), 100);
+    const t2 = setTimeout(() => setLogoScale(1), 100);
+    const t3 = setTimeout(() => setLogoRotation(720), 100);
+    const t4 = setTimeout(() => setLogoRotation(720 + 2880), 2000);
+    const t5 = setTimeout(() => setLogoOpacity(0), 5000);
+    const t6 = setTimeout(() => setLogoScale(0.5), 5000);
+    const t7 = setTimeout(() => setContainerOpacity(0), 5500);
+    const t8 = setTimeout(() => setHidden(true), 6500);
     
     return () => {
       clearTimeout(t1);
@@ -30,12 +31,38 @@ export default function Intro({ onComplete }: IntroProps) {
       clearTimeout(t4);
       clearTimeout(t5);
       clearTimeout(t6);
+      clearTimeout(t7);
+      clearTimeout(t8);
     };
-  }, [onComplete]);
+  }, []);
+
+  useEffect(() => {
+    if (hidden) {
+      onComplete();
+    }
+  }, [hidden, onComplete]);
 
   return (
-    <div className={`intro-container ${bgFading ? 'bg-fade-out' : ''} ${containerHidden ? 'hidden' : ''}`}>
-      <div className={`intro-logo-wrapper ${stage >= 1 ? 'logo-fade-in' : ''} ${stage === 2 ? 'logo-spin-start' : ''} ${stage >= 3 ? 'logo-spin-fast' : ''} ${stage === 4 ? 'logo-fade-out' : ''}`}>
+    <div style={{
+      position: 'fixed',
+      inset: 0,
+      zIndex: 9999,
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      opacity: containerOpacity,
+      transition: 'opacity 1s ease-out',
+      pointerEvents: hidden ? 'none' : 'auto'
+    }}>
+      <div style={{
+        width: '180px',
+        height: '180px',
+        position: 'relative',
+        opacity: logoOpacity,
+        transform: `scale(${logoScale}) rotate(${logoRotation}deg)`,
+        transition: 'opacity 0.5s ease-out, transform 0.5s ease-out'
+      }}>
         <Image
           src="/flashmultimarcas/logo.png"
           alt="Flash Multimarcas"
