@@ -317,21 +317,24 @@ html, body {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   transition: opacity 0.5s ease-in-out;
-  animation: hero-zoom-move 30s linear infinite;
+  animation: cinematicPan 12s ease-in-out infinite alternate;
+  will-change: transform, background-position;
+  filter: contrast(1.05) saturate(1.1);
+}
+
+@keyframes cinematicPan {
+  0% {
+    background-position: 50% 50%;
+    background-size: 115%;
+  }
+  100% {
+    background-position: 55% 50%;
+    background-size: 120%;
+  }
 }
 
 .tesla-hero-bg.fading-out {
   opacity: 0;
-}
-
-@keyframes hero-zoom-move {
-  0% { background-position: 50% 50%; background-size: 100% 100%; }
-  50% { background-position: 40% 50%; background-size: 110% 110%; }
-  100% { background-position: 50% 50%; background-size: 100% 100%; }
-}
-
-.tesla-hero-bg {
-  filter: contrast(1.05) saturate(1.1);
 }
 
 .tesla-hero-bg.fading-out {
@@ -759,6 +762,7 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  max-width: 1000px;
 }
 
 @media (min-width: 769px) {
@@ -2122,27 +2126,26 @@ html, body {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 50px;
-  height: 50px;
-  background: rgba(0,0,0,0.8);
-  border: 3px solid #ffc800;
+  width: 40px;
+  height: 40px;
+  background: rgba(0,0,0,0.9);
+  border: 2px solid rgba(255,255,255,0.3);
   border-radius: 50%;
-  color: #ffc800;
+  color: #fff;
   cursor: pointer;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   transition: all 0.3s ease;
 }
 
 .gallery-close:hover {
-  background: #ffc800;
-  color: #000;
-  box-shadow: 0 0 25px rgba(255,200,0,0.6);
-  transform: scale(1.1);
+  background: rgba(255,255,255,0.2);
+  border-color: #fff;
+  color: #fff;
 }
 
 .gallery-img-counter {
@@ -2162,14 +2165,14 @@ html, body {
 
 .gallery-arrow {
   position: fixed;
-  bottom: 200px;
-  transform: translateY(0);
-  width: 40px;
-  height: 40px;
-  background: rgba(0,0,0,0.85);
-  border: 2px solid #ffc800;
+  bottom: 50%;
+  transform: translateY(50%);
+  width: 44px;
+  height: 44px;
+  background: rgba(0,0,0,0.8);
+  border: 2px solid rgba(255,255,255,0.4);
   border-radius: 50%;
-  color: #ffc800;
+  color: #fff;
   cursor: pointer;
   z-index: 60;
   display: flex;
@@ -2178,37 +2181,31 @@ html, body {
   font-size: 1rem;
   font-weight: bold;
   transition: all 0.3s ease;
-  opacity: 1;
-  box-shadow: 0 0 15px rgba(255,200,0,0.3);
 }
 
 .gallery-arrow:hover {
-  background: #ffc800;
-  border-color: #ffc800;
-  color: #000;
-  box-shadow: 0 0 25px rgba(255,200,0,0.5);
-  transform: scale(1.1);
+  background: rgba(255,255,255,0.2);
+  border-color: #fff;
+  transform: translateY(50%) scale(1.1);
 }
 
-.gallery-arrow:active,
-.gallery-arrow.active {
-  background: #ffc800;
-  border-color: #ffc800;
-  color: #000;
-  transform: scale(0.95);
+.gallery-arrow:active {
+  background: rgba(255,255,255,0.3);
+  transform: translateY(50%) scale(0.95);
 }
 
 .gallery-arrow-left {
-  left: 10px;
+  left: 20px;
 }
 
 .gallery-arrow-right {
-  right: 10px;
+  right: 20px;
 }
 
 @media (max-width: 768px) {
   .gallery-arrow {
-    bottom: 180px;
+    bottom: 50%;
+    transform: translateY(50%);
     width: 36px;
     height: 36px;
   }
@@ -2308,12 +2305,13 @@ html, body {
 .gallery-float-card {
   position: fixed;
   bottom: 20px;
-  left: 20px;
-  width: 90%;
-  max-width: 900px;
+  left: 13px;
+  right: 13px;
+  width: calc(100% - 26px);
+  max-width: 550px;
   max-height: 300px;
   background: rgba(0,0,0,0.95);
-  border: 1px solid rgba(255,200,0,0.4);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 10px;
   padding: 20px;
   z-index: 50;
@@ -2332,7 +2330,7 @@ html, body {
 
 .gallery-float-card.expanded {
   max-height: 480px;
-  max-width: 450px;
+  max-width: 550px;
 }
 
 .gallery-float-header {
@@ -2367,8 +2365,8 @@ html, body {
 }
 
 .gallery-year {
-  font-size: 1.6rem;
-  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
   margin: 0;
 }
 
