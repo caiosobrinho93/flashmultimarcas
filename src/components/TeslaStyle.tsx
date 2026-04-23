@@ -19,7 +19,6 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
   const [zoomLevel, setZoomLevel] = useState(100);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [carEffect, setCarEffect] = useState(2);
-  const [carAnimationStage, setCarAnimationStage] = useState<'idle' | 'fadeOut' | 'reset' | 'fadeIn' | 'animating'>('idle');
   const zoomOptions = [100, 150, 200, 300, 400];
   const isTransitioning = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -34,7 +33,7 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
     if (index === displayedCarIndex.current) return;
     
     isTransitioning.current = true;
-    setCarAnimationStage('fadeOut');
+    setIsFadingOut(true);
     
     if (scrollRef.current) {
       const item = scrollRef.current.children[index] as HTMLElement;
@@ -42,19 +41,14 @@ export default function TeslaStyle({ vehicles }: TeslaStyleProps) {
     }
     
     setTimeout(() => {
-      setCarAnimationStage('reset');
       setDisplayedCar(vehicles[index]);
       displayedCarIndex.current = index;
+      setCenterIndex(index);
       scrollPosRef.current = index * 100;
       
       setTimeout(() => {
-        setCarAnimationStage('fadeIn');
-        setCenterIndex(index);
-        
-        setTimeout(() => {
-          setCarAnimationStage('animating');
-          isTransitioning.current = false;
-        }, 800);
+        setIsFadingOut(false);
+        isTransitioning.current = false;
       }, 100);
     }, 500);
   };
@@ -143,8 +137,8 @@ useEffect(() => {
           <div className="menu-fixed-top">
             <div className="menu-config-links">
               <button className="close-menu" onClick={() => setMenuOpen(false)}>✕</button>
-              <a href="/flashmultimarcas/admin" className="menu-config-icon" title="Dashboard">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <a href="/flashmultimarcas/admin" className="menu-config-icon" title="Administrador">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
               </a>
               <a href={storeInfo.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="menu-config-icon" title="Localização">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -175,28 +169,30 @@ useEffect(() => {
               ))}
             </div>
           </div>
-          <div className="car-name-group">
-            <div className={`car-model-gamer ${carAnimationStage === 'animating' ? 'active' : ''}`}>
-              <div className="car-model-gamer-shape" />
-              <span>{currentCar.model}</span>
-              <div className="car-model-gamer-fire" />
-            </div>
-            <div className="car-model-sub">
-              <span className="car-year">{currentCar.year}</span>
-              <span className="car-brand">{currentCar.brand}</span>
-              <button 
-                type="button" 
-                className="details-lupa-btn"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
-                title="Ver detalhes"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="20" height="20">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="M21 21l-4.35-4.35"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+        </div>
+      </div>
+
+      {/* Nome do Carro - Fora do Menu */}
+      <div className="car-name-group">
+        <div className="car-model-gamer">
+          <div className="car-model-gamer-shape" />
+          <span>{currentCar.model}</span>
+          <div className="car-model-gamer-fire" />
+        </div>
+        <div className="car-model-sub">
+          <span className="car-year">{currentCar.year}</span>
+          <span className="car-brand">{currentCar.brand}</span>
+          <button 
+            type="button" 
+            className="details-lupa-btn"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDetailsModalOpen(true); }}
+            title="Ver detalhes"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="20" height="20">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -219,7 +215,7 @@ useEffect(() => {
       {/* Hero Main */}
       <div className="tesla-hero-container">
         <div 
-          className={`tesla-hero tesla-hero-bg ${carAnimationStage === 'fadeOut' ? 'fading-out' : ''} ${carAnimationStage === 'reset' ? 'reset-position' : ''} ${carAnimationStage === 'fadeIn' ? 'fading-in' : ''} ${carAnimationStage === 'animating' ? 'animating' : ''}`}
+          className={`tesla-hero tesla-hero-bg ${isFadingOut ? 'fading-out' : ''}`}
           style={{ backgroundImage: `url(/flashmultimarcas${displayedCar.imageUrl})` }}
         />
         <div className="hero-dots">
