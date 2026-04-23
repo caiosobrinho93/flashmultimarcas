@@ -175,11 +175,6 @@ useEffect(() => {
 
       {/* Nome do Carro - Fora do Menu */}
       <div className="car-name-group">
-        <div className="car-model-gamer">
-          <div className="car-model-gamer-shape" />
-          <span>{currentCar.model}</span>
-          <div className="car-model-gamer-fire" />
-        </div>
         <div className="car-model-sub">
           <span className="car-year">{currentCar.year}</span>
           <span className="car-brand">{currentCar.brand}</span>
@@ -194,6 +189,11 @@ useEffect(() => {
               <path d="M21 21l-4.35-4.35"/>
             </svg>
           </button>
+        </div>
+        <div className="car-model-gamer">
+          <div className="car-model-gamer-shape" />
+          <span>{currentCar.model}</span>
+          <div className="car-model-gamer-fire" />
         </div>
       </div>
 
