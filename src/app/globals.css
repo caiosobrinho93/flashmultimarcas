@@ -317,19 +317,23 @@ html, body {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   transition: opacity 0.5s ease-in-out;
-  animation: cinematicPan 12s ease-in-out infinite alternate;
+  animation: cinematicPan 8s ease-in-out infinite alternate;
   will-change: transform, background-position;
-  filter: contrast(1.05) saturate(1.1);
+  filter: contrast(1.08) saturate(1.15) brightness(1.05);
 }
 
 @keyframes cinematicPan {
   0% {
     background-position: 50% 50%;
-    background-size: 115%;
+    background-size: 125%;
+  }
+  50% {
+    background-position: 45% 50%;
+    background-size: 130%;
   }
   100% {
     background-position: 55% 50%;
-    background-size: 120%;
+    background-size: 125%;
   }
 }
 
