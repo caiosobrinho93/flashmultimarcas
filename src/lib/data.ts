@@ -412,6 +412,7 @@ export const storeInfo = {
   phone: '(17) 99758-3742',
   whatsapp: '17997583742',
   instagram: '@flashmotorsvotuporanga',
+  googleMapsUrl: 'https://www.google.com/maps/place/Flash+Multimarcas/@-20.4230,49.9725,17z',
 };
 
 export const ADMIN_CREDENTIALS = {

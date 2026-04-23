@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FlashMultimarcas</string>
+    <string name="title_activity_main">FlashMultimarcas</string>
+    <string name="package_name">com.flash.multimarcas</string>
+    <string name="custom_url_scheme">com.flash.multimarcas</string>
+</resources>
