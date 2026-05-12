@@ -1,13 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { supabase } from '@/lib/supabase';
 import TeslaStyle from '@/components/TeslaStyle';
-import Intro from '@/components/Intro';
 import { Vehicle } from '@/types';
 import { vehicles as localVehicles } from '@/lib/data';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+import { prefixPath } from '@/lib/utils';
 
 function preloadImages(imagePaths: string[]) {
   return Promise.all(
@@ -23,11 +21,8 @@ function preloadImages(imagePaths: string[]) {
 }
 
 export default function Home() {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>(localVehicles.filter(v => v.status === 'available'));
   const [loading, setLoading] = useState(true);
-  const [showIntro, setShowIntro] = useState(true);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-  const [introComplete, setIntroComplete] = useState(false);
   const dataLoaded = useRef(false);
 
   useEffect(() => {
@@ -36,20 +31,14 @@ export default function Home() {
       dataLoaded.current = true;
 
       try {
-        const { createClient } = require('@supabase/supabase-js');
-        const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
         const { data, error } = await supabase
           .from('vehicles')
           .select('*')
           .eq('status', 'available')
           .order('created_at', { ascending: false });
 
-        let vehicleData;
-        if (error || !data || data.length === 0) {
-          vehicleData = localVehicles.filter(v => v.status === 'available');
-        } else {
-          vehicleData = data.map((v: any) => ({
+        if (!error && data && data.length > 0) {
+          const vehicleData = data.map((v: any) => ({
             id: v.id,
             model: v.model,
             brand: v.brand,
@@ -67,17 +56,16 @@ export default function Home() {
             createdAt: v.created_at,
             extras: v.extras
           }));
+          setVehicles(vehicleData);
+          const imagePaths = vehicleData.map((v: Vehicle) => prefixPath(v.imageUrl));
+          await preloadImages(imagePaths as string[]);
+        } else {
+          // If supabase fails or is empty, we already have localVehicles in state
+          const imagePaths = vehicles.map((v: Vehicle) => prefixPath(v.imageUrl));
+          await preloadImages(imagePaths as string[]);
         }
-
-        setVehicles(vehicleData);
-        
-        const imagePaths = vehicleData.map((v: Vehicle) => `/flashmultimarcas${v.imageUrl}`);
-        await preloadImages(imagePaths as string[]);
-        setImagesLoaded(true);
       } catch (err) {
-        const availableLocal = localVehicles.filter(v => v.status === 'available');
-        setVehicles(availableLocal);
-        setImagesLoaded(true);
+        console.error('Fetch error:', err);
       } finally {
         setLoading(false);
       }
@@ -86,32 +74,7 @@ export default function Home() {
     fetchVehicles();
   }, []);
 
-  const handleIntroComplete = () => {
-    setIntroComplete(true);
-    setTimeout(() => setShowIntro(false), 500);
-  };
-
-  if (loading || showIntro) {
-    return (
-      <div className="min-h-screen bg-black">
-        {showIntro && !introComplete && (
-          <Intro onComplete={handleIntroComplete} />
-        )}
-        {(loading || !imagesLoaded) && !introComplete && (
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="text-white text-center">
-              <div className="w-16 h-16 border-4 border-yellow border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="font-russo text-yellow">CARREGANDO...</p>
-            </div>
-          </div>
-        )}
-        {introComplete && !loading && imagesLoaded && (
-          <TeslaStyle vehicles={vehicles} />
-        )}
-      </div>
-    );
-  }
-
+  // Removed the 'if (loading) return <div className="bg-black" />' to eliminate initial black flash
   return (
     <main className="min-h-screen">
       <TeslaStyle vehicles={vehicles} />

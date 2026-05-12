@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   keywords: 'carros, seminovos, Votuporanga, Flash Multimarcas',
   authors: [{ name: storeInfo.name }],
   metadataBase: new URL('https://caiosobrinho93.github.io/flashmultimarcas'),
-  manifest: '/manifest.json',
+  manifest: '/flashmultimarcas/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

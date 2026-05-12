@@ -2,12 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { Vehicle, Lead } from '@/types';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const carBrands: Record<string, string[]> = {
   'Chevrolet': ['Onix', 'Cruze', 'Tracker', 'S10', 'Colorado', 'Spin', 'Equinox', 'Trailblazer', 'Camaro', 'Bolt'],
@@ -306,7 +303,7 @@ export default function Dashboard() {
               <div key={vehicle.id} className="bg-gray-dark border border-white/10 p-4 flex items-center gap-4">
                 <div className="w-24 h-16 bg-black rounded overflow-hidden flex-shrink-0">
                   {vehicle.imageUrl && (
-                    <img src={vehicle.imageUrl} alt={vehicle.model} className="w-full h-full object-cover" />
+                    <img src={vehicle.imageUrl.startsWith('http') ? vehicle.imageUrl : `/flashmultimarcas${vehicle.imageUrl}`} alt={vehicle.model} className="w-full h-full object-cover" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -667,9 +664,9 @@ function VehicleModal({ vehicle, onSave, onClose, saving }: { vehicle: Vehicle |
                 {uploadedImages.map((img, idx) => (
                   <div key={idx} className="relative group">
                     <img 
-                      src={img} 
+                      src={img.startsWith('http') ? img : `/flashmultimarcas${img}`} 
                       alt={`Imagem ${idx + 1}`} 
-                      className="w-full h-20 object-cover rounded"
+                      className="w-full h-full object-cover rounded"
                     />
                     <button
                       type="button"

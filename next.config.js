@@ -6,9 +6,11 @@ const withPWA = require('next-pwa')({
   disable: process.env.NODE_ENV === 'development',
 });
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
-  output: 'export',
-  basePath: '/flashmultimarcas',
+  output: isProd ? 'export' : undefined,
+  basePath: isProd ? '/flashmultimarcas' : '',
   trailingSlash: true,
   images: {
     unoptimized: true,
